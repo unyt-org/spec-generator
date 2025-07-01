@@ -41,11 +41,24 @@ export default defineConfig({
     },
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Files', link: '/README' },
+      { text: 'Team', link: '/pages/team'}
     ],
     sidebar,
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
+      { icon: 'github', link: 'https://github.com/unyt-org' }
+    ],
+    footer: {
+      message: `
+        <div style="display: flex; flex-direction: row; gap: 1rem;">
+          <span>© ${new Date().getFullYear()} unyt.org e.V.</span>
+          <div style="display: flex; justify-content: center; gap: 1rem;">
+            <a href="https://unyt.org/terms-of-service" target="_blank">Terms</a>
+            <a href="https://unyt.org/privacy" target="_blank">Privacy</a>
+            <a href="https://unyt.org/legal-notice" target="_blank">Legal</a>
+          </div>  
+        </div>
+      `
+    }
   }
 })

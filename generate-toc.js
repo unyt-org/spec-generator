@@ -3,7 +3,7 @@ import path from 'path';
 
 const docsDir = path.resolve('./');
 const ignoreFiles = ['index.md'];
-const ignoreDirs = ['node_modules', '.vitepress', '.git'];
+const ignoreDirs = ['node_modules', '.vitepress', '.git', 'pages'];
 
 const mdFiles = [];
 

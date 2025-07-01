@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const docsDir = path.resolve('./');
-const ignoreDirs = ['node_modules', '.vitepress', '.git'];
+const ignoreDirs = ['node_modules', '.vitepress', '.git', 'pages'];
 const ignoreFiles = ['index.md'];
 
 function scan(dir) {
