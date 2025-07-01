@@ -20,19 +20,29 @@ try {
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "spec-generator",
-  description: "A VitePress Site",
+  title: "DATEX Spec",
   head: [
     ['script', { src: 'https://unpkg.com/typescript@latest/lib/typescript.js' }],
     ['script', { src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js' }],
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: 'https://dev.cdn.unyt.org/unyt_core/assets/skeleton_light.svg'
+      }
+    ]
   ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: 'https://cdn.unyt.org/unyt-resources/logos/unyt/text-light-transparent-3.svg',
+    search: {
+      provider: 'local'
+    },
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Examples', link: '/markdown-examples' }
     ],
-
     sidebar,
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
