@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "docs:dev": "npm run docs:prebuild && vitepress dev",
+    "docs:dev": "npm run docs:prebuild && vitepress dev docs",
     "docs:prebuild": "node generate-toc.js && node generate-sidebar.js",
-    "docs:build": "npm run docs:prebuild && vitepress build",
-    "docs:preview": "vitepress preview"
+    "docs:build": "npm run docs:prebuild && vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@types/node": "^24.0.8",

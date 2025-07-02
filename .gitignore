@@ -1,7 +1,7 @@
 node_modules
 
-.vitepress/cache
-.vitepress/dist
+docs/.vitepress/cache
+docs/.vitepress/dist
 
-.vitepress/sidebar.json
-.vitepress/toc.json
+docs/sidebar.json
+docs/toc.json

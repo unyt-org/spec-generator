@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       isRunning: false,
-      output: ''
+      output: '',
     }
   },
   mounted() {

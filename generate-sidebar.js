@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 
-const docsDir = path.resolve('./');
-const ignoreDirs = ['node_modules', '.vitepress', '.git', 'pages'];
-const ignoreFiles = ['index.md'];
+const docsDir = path.resolve('./docs');
+const ignoreDirs = ['node_modules', '.vitepress', '.git'];
+const ignoreFiles = ['index.md', 'contributor.md'];
 
 function scan(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });

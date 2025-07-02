@@ -2,7 +2,7 @@
 layout: home
 ---
 <script setup>
-import toc from './.vitepress/toc.json'
+import toc from './toc.json'
 </script>
 
 # Inhaltsverzeichnis

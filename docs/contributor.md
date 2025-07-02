@@ -90,8 +90,8 @@ const partners = [
   <VPTeamMembers size="medium" :members="coreMembers" />
 
   <VPTeamPageSection>
-    <template #title>Partners</template>
-    <template #lead>Our valued community partners.</template>
+    <template #title>Contributors</template>
+    <template #lead>Our valued community contributors.</template>
     <template #members>
       <VPTeamMembers size="small" :members="partners" />
     </template>

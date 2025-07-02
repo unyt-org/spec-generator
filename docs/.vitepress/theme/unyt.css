@@ -1,0 +1,368 @@
+@import url("https://cdn.unyt.org/uix/src/style/fontawesome/css/all.min.css");
+:root {
+	--accent: blue;
+
+	/* text */
+	--unyt-dark-text-primary: #ffffff;
+	--unyt-light-text-primary: #000000;
+
+	--unyt-dark-text-secondary: #dfdfdf;
+	--unyt-light-text-secondary: #2a2a2a;
+
+	/* button */
+	--unyt-dark-button-primary: #ffffff;
+	--unyt-light-button-primary: #000000;
+
+	--unyt-dark-button-secondary: #1d1d1d;
+	--unyt-light-button-secondary: #dedede;
+	
+	/* background */
+	--unyt-dark-bg-primary: #111111;
+	--unyt-light-bg-primary: #ffffff;
+
+	--unyt-dark-bg-primary-hover: #232323;
+	--unyt-light-bg-primary-hover: #f0f0f0;
+
+	--unyt-dark-bg-primary-selected: #3a3a3a;
+	--unyt-light-bg-primary-selected: #bbbbbb;
+
+
+	--unyt-dark-bg-secondary: #1b1b1b;
+	--unyt-light-bg-secondary: #f6f6f6;
+	
+	--unyt-dark-bg-controls: #212121;
+	--unyt-light-bg-controls: #ffffff;
+
+	--unyt-dark-bg-alert: #2b2b2b;
+	--unyt-light-bg-alert: #eeeeee;
+
+	/* border */
+	--unyt-dark-border-primary: hsla(0, 0%, 100%, .1);
+	--unyt-light-border-primary: hsla(0, 0%, 0%, 0.1);
+	--unyt-dark-border-invalid: rgb(215, 26, 26);
+	--unyt-light-border-invalid: rgb(215, 26, 26);
+}
+
+.unyt-background-image[data-mode="dark"] {
+	background-image: var(--image-dark, None);
+}
+.unyt-background-image[data-mode="light"] {
+	background-image: var(--image-light, None);
+}
+
+.unyt-popover-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	backdrop-filter: blur(7px) brightness(0.2) contrast(1.2);
+}
+uix-markdown-wrapper {
+	margin: 0;
+	padding: 0;
+	--text: var(--unyt-text-primary);
+}
+
+textarea,
+select,
+input:not([type="checkbox"]),
+progress {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+* {
+	color: inherit;
+	font-family: inherit;
+	line-height: 1.35;
+}
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+html, body {
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+	font-family: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir, "Nimbus Sans L", Roboto, "Noto Sans", "Segoe UI", Arial, Helvetica, "Helvetica Neue", sans-serif;
+}
+body {
+	display: block; /* contents before, fuck SaFarI*/
+	background-color: var(--unyt-bg-primary);
+	color: var(--unyt-text-primary);
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+	text-wrap: pretty;
+	overflow-wrap: break-word;
+}
+h1, h2, h3 {
+	line-height: 1.1;
+}
+
+a, a:visited {
+	color: var(--accent);
+	text-underline-position: under;
+}
+
+
+@keyframes fadeIn {
+	from { opacity: 0.7; transform: translateY(50px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+	from { opacity: 0; transform: translateX(-100px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+	from { opacity: 0; transform: translateX(100px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeOut {
+	from {opacity: 1; transform: translateY(50px);}
+	to {opacity: 0.7; transform: translateY(0);}
+}
+
+.animate {
+	opacity: 0;
+	animation: fadeIn 0.4s ease forwards;
+	animation-timeline: view();
+	animation-range: entry 40% cover 60%;
+
+	&.left {
+		animation-name: fadeInLeft;
+	}
+	&.right {
+		animation-name: fadeInRight;
+	}
+}
+.animate-reverse {
+	opacity: 1;
+	animation: fadeOut 0.4s ease forwards;
+	animation-timeline: view();
+	animation-range: exit 0% exit 30%; 
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.animate, .animate-reverse {
+		animation: none;
+	}
+}
+
+
+/* new animations */
+.build-in-animate {
+    opacity: 0;
+    transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);
+    -ms-transform: scale(.96) translateY(24px);
+    transform: scale(.96) translateY(24px)
+}
+
+.fade-in {
+    opacity: 1;
+    -ms-transform: scale(1) translateY(0);
+    transform: scale(1) translateY(0);
+    transition-delay: .2s
+}
+
+.build-scale-up {
+    opacity: 0;
+    transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);
+    -ms-transform: scale(.96) translateY(24px);
+    transform: scale(.96) translateY(24px)
+}
+
+.fade-in-animate {
+    opacity: 1;
+    -ms-transform: scale(1) translateY(0);
+    transform: scale(1) translateY(0)
+}
+
+.anim-fade-in {
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out
+}
+
+.anim-fade-out,.anim-fade-up {
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out
+}
+
+.anim-fade-in.fast {
+    animation-duration: .3s
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+.anim-fade-out {
+    animation-name: fade-out;
+    animation-duration: 1s
+}
+
+.anim-fade-down,.anim-fade-out.fast,.anim-fade-up {
+    animation-duration: .3s
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+.anim-fade-up {
+    opacity: 0;
+    animation-name: fade-up;
+    animation-delay: 1s
+}
+
+.anim-grow-x,.anim-shrink-x {
+    animation-duration: .3s;
+    animation-fill-mode: forwards;
+    animation-delay: .5s
+}
+
+@keyframes fade-up {
+    0% {
+        opacity: .8;
+        transform: translateY(100%)
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+.anim-fade-down {
+    animation-name: fade-down;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in
+}
+
+@keyframes fade-down {
+    0% {
+        opacity: 1;
+        transform: translateY(0)
+    }
+
+    100% {
+        opacity: .5;
+        transform: translateY(100%)
+    }
+}
+
+.anim-grow-x {
+    width: 0%;
+    animation-name: grow-x;
+    animation-timing-function: ease
+}
+
+@keyframes grow-x {
+    to {
+        width: 100%
+    }
+}
+
+.anim-shrink-x {
+    animation-name: shrink-x;
+    animation-timing-function: ease-in-out
+}
+
+@keyframes shrink-x {
+    to {
+        width: 0%
+    }
+}
+
+.anim-scale-in {
+    animation-name: scale-in;
+    animation-duration: .15s;
+    animation-timing-function: cubic-bezier(.2,0,.13,1.5)
+}
+
+@keyframes scale-in {
+    0% {
+        opacity: 0;
+        transform: scale(.5)
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1)
+    }
+}
+
+.anim-pulse {
+    animation-name: pulse;
+    animation-duration: 2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite
+}
+
+@keyframes pulse {
+    0%,100% {
+        opacity: .3
+    }
+
+    10% {
+        opacity: 1
+    }
+}
+
+.anim-pulse-in {
+    animation-name: pulse-in;
+    animation-duration: .5s
+}
+
+@keyframes pulse-in {
+    0%,100% {
+        transform: scale3d(1,1,1)
+    }
+
+    50% {
+        transform: scale3d(1.1,1.1,1.1)
+    }
+}
+
+.anim-hover-grow,.hover-grow {
+    transition: transform .3s;
+    backface-visibility: hidden
+}
+
+.anim-hover-grow:hover,.hover-grow:hover {
+    -ms-transform: scale(1.025);
+    transform: scale(1.025)
+}
+
+.anim-rotate {
+    animation: rotate-keyframes 1s linear infinite
+}
+
+@keyframes rotate-keyframes {
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+/***/

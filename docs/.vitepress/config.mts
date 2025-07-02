@@ -20,6 +20,7 @@ try {
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/',
   title: "DATEX Spec",
   head: [
     ['script', { src: 'https://unpkg.com/typescript@latest/lib/typescript.js' }],
@@ -29,20 +30,21 @@ export default defineConfig({
       {
         rel: 'icon',
         type: 'image/svg+xml',
-        href: 'https://dev.cdn.unyt.org/unyt_core/assets/skeleton_light.svg'
+        href: '/transparent.svg'
       }
     ]
+    
   ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: 'https://cdn.unyt.org/unyt-resources/logos/unyt/text-light-transparent-3.svg',
+    logo: '/transparent.svg',
     search: {
       provider: 'local'
     },
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Files', link: '/README' },
-      { text: 'Team', link: '/pages/team'}
+      { text: 'Files', link: '/TypescriptPlayground' },
+      { text: 'Team', link: '/contributor'}
     ],
     sidebar,
     socialLinks: [
