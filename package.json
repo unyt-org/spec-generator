@@ -16,6 +16,7 @@
   "dependencies": {
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-mathjax3": "^4.3.2",
+    "vitepress-plugin-codeblocks-fold": "^1.2.35",
     "vitepress-plugin-image-viewer": "^1.1.6"
   }
 }
