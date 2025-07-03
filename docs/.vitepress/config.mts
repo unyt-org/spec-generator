@@ -72,7 +72,11 @@ const vitePressOptions = defineConfig({
           </div>  
         </div>
       `
-    }
+    },
+    editLink: {
+      pattern: 'https://github.com/unyt-org/datex-specification/edit/main/:path',
+      text: 'Edit this page on GitHub'
+    },
   }
 })
 
