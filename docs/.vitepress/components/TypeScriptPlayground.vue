@@ -55,12 +55,7 @@ export default {
   },
   methods: {
     detectTheme() {
-      const isDark = document.documentElement.classList.contains('dark') || 
-                     document.documentElement.getAttribute('data-theme') === 'dark' ||
-                     document.body.classList.contains('dark') ||
-                    
-                     getComputedStyle(document.documentElement).getPropertyValue('--vp-c-bg').includes('1e1e1e');
-      
+      const isDark = document.documentElement.classList.contains('dark')
       const newTheme = isDark ? 'dark' : 'light';
       
       if (this.currentTheme !== newTheme) {
@@ -70,34 +65,16 @@ export default {
     },
 
     watchThemeChanges() {
-      this.themeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && 
-              (mutation.attributeName === 'class' || mutation.attributeName === 'data-theme')) {
-            this.detectTheme();
-          }
-        });
-      });
-
+      const checkDarkMode = () => {
+        this.currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        this.updateEditorTheme();
+      };
+      this.themeObserver = new MutationObserver(checkDarkMode);
+  
       this.themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'data-theme']
-      });
-
-      const bodyObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            this.detectTheme();
-          }
-        });
-      });
-
-      bodyObserver.observe(document.body, {
         attributes: true,
         attributeFilter: ['class']
       });
-
-      this.observers = [this.themeObserver, bodyObserver];
     },
 
     updateEditorTheme() {
@@ -144,17 +121,10 @@ export default {
           { token: 'comment', foreground: '6a9955' },
           { token: 'keyword', foreground: '569cd6' },
           { token: 'string', foreground: 'ce9178' },
-          { token: 'number', foreground: 'b5cea8' },
         ],
         colors: {
           'editor.background': '#161618',
-          'editor.foreground': '#d4d4d4',
           'editor.lineHighlightBackground': '#2d2d30',
-          'editor.lineHighlightBorder': '#2d2d30',
-          'editorLineNumber.foreground': '#6a6a6a',
-          'editorLineNumber.activeForeground': '#ffffff',
-          'editor.selectionBackground': '#264f78',
-          'editor.selectionHighlightBackground': '#add6ff26'
         }
       });
 
@@ -163,19 +133,10 @@ export default {
         inherit: true,
         rules: [
           { token: 'comment', foreground: '008000' },
-          { token: 'keyword', foreground: '0000ff' },
-          { token: 'string', foreground: 'a31515' },
-          { token: 'number', foreground: '098658' },
+          { token: 'keyword', foreground: '0000ff' }
         ],
         colors: {
-          'editor.background': '#ffffff',
-          'editor.foreground': '#000000',
-          'editor.lineHighlightBackground': '#f0f0f0',
-          'editor.lineHighlightBorder': '#f0f0f0',
-          'editorLineNumber.foreground': '#237893',
-          'editorLineNumber.activeForeground': '#0b216f',
-          'editor.selectionBackground': '#add6ff',
-          'editor.selectionHighlightBackground': '#add6ff40'
+          'editor.background': '#ffffff'
         }
       });
 
@@ -188,13 +149,6 @@ export default {
         theme: initialTheme,
         automaticLayout: true,
         minimap: { enabled: false },
-        fontSize: 14,
-        lineNumbers: 'on',
-        roundedSelection: true,
-        scrollBeyondLastLine: false,
-        readOnly: false,
-        tabSize: 2,
-        insertSpaces: true
       });
 
       setTimeout(() => {
@@ -311,126 +265,48 @@ export default {
   flex-direction: column;
   height: 600px;
   border-radius: 8px;
-  overflow: hidden;
-  margin: 20px 0;
-  background-color: var(--vp-code-block-bg);
   border: 1px solid var(--vp-c-divider);
-  transition: all 0.2s ease;
+  background: var(--vp-code-block-bg);
 }
 
 .editor-container {
   flex: 1;
-  min-height: 300px;
-  position: relative; 
+  min-height: 200px;
 }
 
 .editor {
-  width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: var(--vp-code-block-bg);
 }
 
 .controls {
   padding: 10px;
   border-top: 1px solid var(--vp-c-divider);
-  border-bottom: 1px solid var(--vp-c-divider);
-  background-color: var(--vp-code-block-bg);
-  transition: all 0.2s ease;
 }
 
 .run-button {
   background: var(--vp-c-brand);
   color: white;
-  border: none;
   padding: 8px 16px;
   border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
-}
-
-.run-button:hover:not(:disabled) {
-  background: var(--vp-c-brand-dark);
-}
-
-.run-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .console-output {
-  flex: 0 0 200px;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--vp-code-block-bg);
-  transition: all 0.2s ease;
+  flex: 0 0 150px;
+  border-top: 1px solid var(--vp-c-divider);
 }
 
 .console-header {
   padding: 8px 16px;
-  background-color: var(--vp-c-bg-alt);
-  color: var(--vp-c-text-1);
   font-weight: 600;
-  font-size: 14px;
-  border-top: 1px solid var(--vp-c-divider);
-  transition: all 0.2s ease;
 }
 
 .console-content {
-  flex: 1;
   padding: 10px;
   overflow-y: auto;
-  font-family: var(--vp-font-family-mono);
+  font-family: monospace;
   font-size: 13px;
-  white-space: pre-wrap;
-  background-color: var(--vp-code-block-bg);
-  color: var(--vp-c-text-code);
-  transition: all 0.2s ease;
 }
 
-.console-message {
-  margin: 2px 0;
-  line-height: 1.4;
-}
-
-.console-log {
-  color: var(--vp-c-text-1);
-}
-
-.console-error {
-  color: var(--vp-c-red);
-}
-
-.console-warn {
-  color: var(--vp-c-yellow);
-}
-
-.console-info {
-  color: var(--vp-c-brand);
-}
-
-.dark .playground-container {
-  border-color: var(--vp-c-divider);
-}
-
-.dark .console-content {
-  scrollbar-width: thin;
-  scrollbar-color: var(--vp-c-divider) transparent;
-}
-
-.dark .console-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.dark .console-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.dark .console-content::-webkit-scrollbar-thumb {
-  background-color: var(--vp-c-divider);
-  border-radius: 3px;
-}
+.console-error { color: #ff4d4f }
+.console-warn { color: #faad14 }
 </style>
