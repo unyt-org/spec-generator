@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import markdownItFootnote from 'markdown-it-footnote'
 import { withSidebar } from 'vitepress-sidebar'
+import { withPwa } from '@vite-pwa/vitepress'
 
 const vitePressOptions = defineConfig({
   base: '/',
@@ -31,6 +32,13 @@ const vitePressOptions = defineConfig({
     math: true
   },
   lastUpdated: true,
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'DATEX Spec',
+      short_name: 'DATEX',
+    }
+  },
   themeConfig: {
     logo: '/transparent.svg',
     search: {
@@ -65,7 +73,8 @@ const vitePressSidebarOptions = {
   capitalizeFirst: true,
   useTitleFromFileHeading: true,
   sortBy: 'asc',
-  // exclude: ['README.md'],
 }
 
-export default withSidebar(vitePressOptions, vitePressSidebarOptions)
+export default withPwa(
+  withSidebar(vitePressOptions, vitePressSidebarOptions)
+)
