@@ -3,6 +3,7 @@ import markdownItFootnote from 'markdown-it-footnote'
 import { withSidebar } from 'vitepress-sidebar'
 import { withPwa } from '@vite-pwa/vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
+import timeline from "vitepress-markdown-timeline";
 
 const vitePressOptions = defineConfig({
   base: '/',
@@ -30,6 +31,7 @@ const vitePressOptions = defineConfig({
     config(md) {
       md.use(markdownItFootnote)
       md.use(groupIconMdPlugin)
+      md.use(timeline);
     },
     math: true
   },

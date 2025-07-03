@@ -12,6 +12,7 @@ import vImageViewer from 'vitepress-plugin-image-viewer/lib/vImageViewer.vue'
 import { useRoute, useData } from 'vitepress'
 import codeblocksFold from 'vitepress-plugin-codeblocks-fold'
 import 'vitepress-plugin-codeblocks-fold/style/index.css'
+import "vitepress-markdown-timeline/dist/theme/index.css";
 
 export default {
   extends: DefaultTheme,
