@@ -81,7 +81,9 @@ const vitePressOptions = defineConfig({
 })
 
 const vitePressSidebarOptions = {
-  documentRootPath: '/docs/',
+  documentRootPath: '/docs',
+  baseRoute: '/spec',
+  scanStartPath: '/spec', 
   collapsed: false,
   capitalizeFirst: true,
   useTitleFromFileHeading: true,
