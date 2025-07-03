@@ -6,8 +6,4 @@ docs/.vitepress/dist
 docs/sidebar.json
 docs/toc.json
 
-# docs/
-
 Archive/
-
-.temp-spec/

@@ -74,9 +74,11 @@ const vitePressOptions = defineConfig({
       `
     },
     editLink: {
-      pattern: 'https://github.com/unyt-org/datex-specification/edit/main/:path',
+      pattern: ({ filePath }) => {
+        return `https://github.com/unyt-org/datex-specification/edit/main/${filePath.replace(/^spec\//, '')}`;
+      },
       text: 'Edit this page on GitHub'
-    },
+    }
   }
 })
 
