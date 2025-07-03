@@ -28,7 +28,7 @@ function scan(dir) {
 scan(path.join(docsDir));
 
 fs.writeFileSync(
-  path.join(docsDir, '.vitepress', 'toc.json'),
+  path.join(docsDir, 'toc.json'),
   JSON.stringify(mdFiles, null, 2)
 );
 

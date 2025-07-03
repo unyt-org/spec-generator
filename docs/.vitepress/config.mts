@@ -1,28 +1,18 @@
 import { defineConfig } from 'vitepress'
-import fs from 'node:fs'
-import path from 'node:path'
+import markdownItFootnote from 'markdown-it-footnote'
+import { withSidebar } from 'vitepress-sidebar'
 
-let sidebar
-
-try {
-  const jsonPath = path.resolve(__dirname, 'sidebar.json')
-  const jsonRaw = fs.readFileSync(jsonPath, 'utf-8')
-  sidebar = JSON.parse(jsonRaw)
-} catch (e) {
-  console.warn('⚠️ sidebar.json not found, falling back to default sidebar')
-  sidebar = [
-    {
-      text: 'Home',
-      link: '/',
-    },
-  ]
-}
-
-// https://vitepress.dev/reference/site-config
-export default defineConfig({
+const vitePressOptions = defineConfig({
   base: '/',
-  title: "DATEX Spec",
+  title: 'DATEX Spec',
   head: [
+    ['script',
+      {
+        defer: '',
+        'data-domain': 'unyt.org',
+        src: 'https://plausible.unyt.org/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js'
+      }
+    ],
     ['script', { src: 'https://unpkg.com/typescript@latest/lib/typescript.js' }],
     ['script', { src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js' }],
     [
@@ -33,10 +23,15 @@ export default defineConfig({
         href: '/transparent.svg'
       }
     ]
-    
   ],
+  markdown: {
+    config(md) {
+      md.use(markdownItFootnote)
+    },
+    math: true
+  },
+  lastUpdated: true,
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
     logo: '/transparent.svg',
     search: {
       provider: 'local'
@@ -44,9 +39,8 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Files', link: '/TypescriptPlayground' },
-      { text: 'Team', link: '/contributor'}
+      { text: 'Team', link: '/contributor' }
     ],
-    sidebar,
     socialLinks: [
       { icon: 'github', link: 'https://github.com/unyt-org' }
     ],
@@ -64,3 +58,14 @@ export default defineConfig({
     }
   }
 })
+
+const vitePressSidebarOptions = {
+  documentRootPath: '/docs/',
+  collapsed: false,
+  capitalizeFirst: true,
+  useTitleFromFileHeading: true,
+  sortBy: 'asc',
+  // exclude: ['README.md'],
+}
+
+export default withSidebar(vitePressOptions, vitePressSidebarOptions)
