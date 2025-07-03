@@ -8,7 +8,7 @@ import toc from './toc.json'
 # Inhaltsverzeichnis
 
 <ul>
-  <li v-for="page in toc" :key="page">
-    <a :href="`/${page.replace(/\.md$/, '')}`">{{ page.replace(/\.md$/, '') }}</a>
+  <li v-for="route in toc" :key="route.path">
+    <a :href="`/${route.path.replace(/\.md$/, '')}`">{{ route.title }}</a>
   </li>
 </ul>
