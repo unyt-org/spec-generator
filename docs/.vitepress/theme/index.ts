@@ -8,7 +8,9 @@ import TypeScriptPlayground from '../components/TypeScriptPlayground.vue'
 import 'viewerjs/dist/viewer.min.css'
 import imageViewer from 'vitepress-plugin-image-viewer'
 import vImageViewer from 'vitepress-plugin-image-viewer/lib/vImageViewer.vue'
-import { useRoute } from 'vitepress'
+import { useRoute, useData } from 'vitepress'
+import codeblocksFold from 'vitepress-plugin-codeblocks-fold'
+import 'vitepress-plugin-codeblocks-fold/style/index.css'
 
 export default {
   extends: DefaultTheme,
@@ -24,6 +26,9 @@ export default {
   },
   setup() {
     const route = useRoute()
+    const { frontmatter } = useData()
+    
     imageViewer(route)
+    codeblocksFold({ route, frontmatter })
   }
 } satisfies Theme
