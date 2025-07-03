@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import markdownItFootnote from 'markdown-it-footnote'
 import { withSidebar } from 'vitepress-sidebar'
 import { withPwa } from '@vite-pwa/vitepress'
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 
 const vitePressOptions = defineConfig({
   base: '/',
@@ -28,8 +29,14 @@ const vitePressOptions = defineConfig({
   markdown: {
     config(md) {
       md.use(markdownItFootnote)
+      md.use(groupIconMdPlugin)
     },
     math: true
+  },
+  vite: {
+    plugins: [
+      groupIconVitePlugin()
+    ]
   },
   lastUpdated: true,
   pwa: {

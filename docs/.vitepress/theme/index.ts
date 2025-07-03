@@ -2,6 +2,7 @@
 import { h } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+import 'virtual:group-icons.css' 
 import './style.css'
 import TypeScriptPlayground from '../components/TypeScriptPlayground.vue'
 // import DatexPlayground from '../components/DatexPlayground.vue'
@@ -27,7 +28,7 @@ export default {
   setup() {
     const route = useRoute()
     const { frontmatter } = useData()
-    
+
     imageViewer(route)
     codeblocksFold({ route, frontmatter })
   }
