@@ -157,3 +157,7 @@
     margin-left: auto;
   }
 }
+
+.VPNavBarTitle {
+  background: var(--unyt-bg-primary);
+}

@@ -20,7 +20,7 @@ function extractTitle(filePath) {
     
     return path.basename(filePath, '.md');
   } catch (error) {
-    console.warn(`Fehler beim Lesen der Datei ${filePath}:`, error.message);
+    console.warn(`Error reading the file ${filePath}:`, error.message);
     return path.basename(filePath, '.md');
   }
 }
