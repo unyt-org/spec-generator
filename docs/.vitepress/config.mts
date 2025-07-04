@@ -12,7 +12,7 @@ const vitePressOptions = defineConfig({
     ['script',
       {
         defer: '',
-        'data-domain': 'unyt.org',
+        'data-domain': 'unyt.org', // change
         src: 'https://plausible.unyt.org/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js'
       }
     ],
