@@ -43,10 +43,44 @@ const vitePressOptions = defineConfig({
   lastUpdated: true,
   pwa: {
     registerType: 'autoUpdate',
+    includeAssets: [
+    'favicon.ico',
+    'apple-touch-icon.png',
+    'mask-icon.svg'
+    ],
     manifest: {
       name: 'DATEX Spec',
       short_name: 'DATEX',
-    }
+      description: 'DATEX Spec: Unified data specification for next-gen systems',
+      theme_color: '#ffffff',
+      icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+    },
+    workbox: {
+      runtimeCaching: [
+        {
+          urlPattern: ({ request }) => request.destination === 'image',
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'images-cache',
+            expiration: {
+              maxEntries: 100,
+              maxAgeSeconds: 60 * 60 * 24 * 30,
+            },
+          },
+        },
+      ],
+    },
   },
   themeConfig: {
     logo: '/transparent.svg',
