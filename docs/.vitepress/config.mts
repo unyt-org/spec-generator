@@ -8,6 +8,8 @@ import timeline from "vitepress-markdown-timeline";
 const vitePressOptions = defineConfig({
   base: '/',
   title: 'DATEX Spec',
+  srcDir: './spec',
+  outDir: './.vitepress/dist',
   head: [
     ['script',
       {
@@ -36,18 +38,20 @@ const vitePressOptions = defineConfig({
     math: true
   },
   vite: {
+    publicDir: '../public',
     plugins: [
       groupIconVitePlugin()
     ]
   },
   lastUpdated: true,
   pwa: {
+    outDir: '../.vitepress/dist',
     registerType: 'autoUpdate',
-    includeAssets: [
-    'favicon.ico',
-    'apple-touch-icon.png',
-    'mask-icon.svg'
-    ],
+    // includeAssets: [
+    // 'favicon.ico',
+    // 'apple-touch-icon.png',
+    // 'mask-icon.svg'
+    // ],
     manifest: {
       name: 'DATEX Spec',
       short_name: 'DATEX',
@@ -88,7 +92,7 @@ const vitePressOptions = defineConfig({
       provider: 'local'
     },
     nav: [
-      { text: 'TOC', link: '/spec/README' },
+      { text: 'TOC', link: '/toc' },
       { text: 'Team', link: '/contributor' }
     ],
     socialLinks: [
@@ -116,13 +120,14 @@ const vitePressOptions = defineConfig({
 })
 
 const vitePressSidebarOptions = {
-  documentRootPath: '/docs',
-  baseRoute: '/spec',
-  scanStartPath: '/spec', 
+  documentRootPath: '/docs/spec',
+  baseRoute: '/',
+  scanStartPath: '/', 
   collapsed: false,
   capitalizeFirst: true,
   useTitleFromFileHeading: true,
   manualSortFileNameByPriority: ['README.md'],
+  excludePattern: ['toc.md'],
   sortBy: 'asc',
 }
 

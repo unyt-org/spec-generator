@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const docsDir = path.resolve('./docs');
+const docsDir = path.resolve('./docs/spec');
 const ignoreFiles = ['index.md', 'contributor.md'];
 const ignoreDirs = ['node_modules', '.vitepress', '.git'];
 const mdFiles = [];
