@@ -51,7 +51,20 @@ function scan(dir) {
 
 scan(docsDir);
 
+const readmeIndex = mdFiles.findIndex(file => 
+  file.path.toLowerCase().endsWith('readme.md')
+);
+
+let readmeEntry;
+if (readmeIndex !== -1) {
+  readmeEntry = mdFiles.splice(readmeIndex, 1)[0];
+}
+
 mdFiles.sort((a, b) => a.path.localeCompare(b.path));
+
+if (readmeEntry) {
+  mdFiles.unshift(readmeEntry);
+}
 
 fs.writeFileSync(
   path.join(docsDir, 'toc.json'),

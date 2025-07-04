@@ -88,8 +88,7 @@ const vitePressOptions = defineConfig({
       provider: 'local'
     },
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Files', link: '/TypescriptPlayground' },
+      { text: 'TOC', link: '/spec/README' },
       { text: 'Team', link: '/contributor' }
     ],
     socialLinks: [
@@ -109,7 +108,7 @@ const vitePressOptions = defineConfig({
     },
     editLink: {
       pattern: ({ filePath }) => {
-        return `https://github.com/unyt-org/datex-specification/edit/main/${filePath.replace(/^spec\//, '')}`;
+        return `https://github.com/unyt-org/datex-specification/blob/main/${filePath.replace(/^spec\//, '')}`;
       },
       text: 'Edit this page on GitHub'
     }
@@ -123,6 +122,7 @@ const vitePressSidebarOptions = {
   collapsed: false,
   capitalizeFirst: true,
   useTitleFromFileHeading: true,
+  manualSortFileNameByPriority: ['README.md'],
   sortBy: 'asc',
 }
 

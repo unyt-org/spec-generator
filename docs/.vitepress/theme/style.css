@@ -169,3 +169,11 @@
       text-decoration: underline;
   }
 }
+
+.VPNavBar .VPNavBarTitle .VPImage {
+  content: url('/transparent-dark.png');
+}
+
+html.dark .VPNavBar .VPNavBarTitle .VPImage {
+  content: url('/transparent.svg');
+}
