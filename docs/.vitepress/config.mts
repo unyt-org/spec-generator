@@ -114,7 +114,7 @@ const vitePressOptions = defineConfig({
       pattern: ({ filePath }) => {
         return `https://github.com/unyt-org/datex-specification/blob/main/${filePath.replace(/^spec\//, '')}`;
       },
-      text: 'Edit this page on GitHub'
+      text: 'View this page on GitHub'
     }
   }
 })
