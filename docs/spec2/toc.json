@@ -1,0 +1,118 @@
+[
+  {
+    "path": "README.md",
+    "title": "DATEX Specification"
+  },
+  {
+    "path": "000_paradigms.md",
+    "title": "Paradigms"
+  },
+  {
+    "path": "010_conformance.md",
+    "title": "Conformance"
+  },
+  {
+    "path": "020_terms.md",
+    "title": "Terms and Definitions"
+  },
+  {
+    "path": "030_DATEX_Introduction.md",
+    "title": "Introduction to DATEX Script"
+  },
+  {
+    "path": "040_dxb_binary.md",
+    "title": "Binary Instruction Codes"
+  },
+  {
+    "path": "050_dxb_execution.md",
+    "title": "DATEX Execution"
+  },
+  {
+    "path": "060_runtime_instructions.md",
+    "title": "Instruction Codes"
+  },
+  {
+    "path": "070_dxb_structure.md",
+    "title": "Structure of a DATEX Block"
+  },
+  {
+    "path": "071_datex_block_handling.md",
+    "title": "DATEX Block Handling"
+  },
+  {
+    "path": "080_types.md",
+    "title": "Data Types and Values"
+  },
+  {
+    "path": "081_composites.md",
+    "title": "Logical Composites"
+  },
+  {
+    "path": "082_endpoints.md",
+    "title": "Endpoints"
+  },
+  {
+    "path": "200_script_mapping.md",
+    "title": "Mapping from DATEX Script to DXB (High-level abstractions)"
+  },
+  {
+    "path": "210_examples.md",
+    "title": "Examples"
+  },
+  {
+    "path": "300_data_structures.md",
+    "title": "Data Structures"
+  },
+  {
+    "path": "301_enums.md",
+    "title": "Enums"
+  },
+  {
+    "path": "302_procedures.md",
+    "title": "Procedures"
+  },
+  {
+    "path": "900_bibliography.md",
+    "title": "Bibliography"
+  },
+  {
+    "path": "A1_Auth.md",
+    "title": "Endpoint Authentication & Authorization"
+  },
+  {
+    "path": "A2_Transmission_Channels.md",
+    "title": "General Requirements for an underlying transmission channel"
+  },
+  {
+    "path": "A3_Firewall_Interface.md",
+    "title": "Endpoint Firewall Interface"
+  },
+  {
+    "path": "A4_Types_JavaScript.md",
+    "title": "A4_Types_JavaScript"
+  },
+  {
+    "path": "get-started2.md",
+    "title": "Das ist die zweite Seite"
+  },
+  {
+    "path": "gfm.md",
+    "title": "Documentation: Supported Markdown Syntax"
+  },
+  {
+    "path": "markdown-examples.md",
+    "title": "Markdown Extension Examples"
+  },
+  {
+    "path": "markdownTest.md",
+    "title": "GitHub Flavored Markdown Syntax"
+  },
+  {
+    "path": "toc.md",
+    "title": "Inhaltsverzeichnis"
+  },
+  {
+    "path": "TypescriptPlayground.md",
+    "title": "DATEX"
+  }
+]
