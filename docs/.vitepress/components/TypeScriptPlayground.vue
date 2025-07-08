@@ -24,7 +24,7 @@ let monacoEditor = null;
 export default {
   name: 'TypeScriptPlayground',
   props: {
-    initialCode: {
+    code: {
       type: String,
       default: `// TypeScript Code Here`
     }
