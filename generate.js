@@ -2,9 +2,28 @@ import fs from 'fs';
 import path from 'path';
 
 const docsDir = path.resolve('./docs/spec');
-const ignoreFiles = ['index.md', 'contributor.md'];
+const customDocsDir = path.resolve('./docs/spec2');
+const ignoreFiles = ['index.md', 'contributor.md', 'toc.md'];
 const ignoreDirs = ['node_modules', '.vitepress', '.git'];
 const mdFiles = [];
+
+function moveCustomFiles(srcDir, destDir) {
+  if (!fs.existsSync(srcDir)) return;
+
+  const entries = fs.readdirSync(srcDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+
+    if (entry.isDirectory()) {
+      fs.mkdirSync(destPath, { recursive: true });
+      moveCustomFiles(srcPath, destPath);
+    } else if (entry.name.endsWith('.md')) {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
 
 function extractTitle(filePath) {
   try {
@@ -48,7 +67,7 @@ function scan(dir) {
     }
   }
 }
-
+moveCustomFiles(customDocsDir, docsDir);
 scan(docsDir);
 
 const readmeIndex = mdFiles.findIndex(file => 

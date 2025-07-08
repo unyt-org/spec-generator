@@ -96,7 +96,7 @@ const vitePressOptions = defineConfig({
       { text: 'Team', link: '/contributor' }
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/unyt-org' }
+      { icon: 'github', link: 'https://github.com/unyt-org/datex-specification' }
     ],
     footer: {
       message: `

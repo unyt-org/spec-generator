@@ -10,7 +10,9 @@ const TARGET_DIR = path.join(__dirname, 'docs/spec')
 function updateRepo() {
   try {
     if (fs.existsSync(path.join(TARGET_DIR, '.git'))) {
-      execSync(`git -C ${TARGET_DIR} pull`, { stdio: 'inherit' })
+      execSync(`git -C ${TARGET_DIR} fetch`, { stdio: 'inherit' })
+      execSync(`git -C ${TARGET_DIR} reset --hard origin/main`, { stdio: 'inherit' })
+      execSync(`git -C ${TARGET_DIR} clean -fd`, { stdio: 'inherit' })
     } else {
       execSync(`git clone ${SPEC_REPO} ${TARGET_DIR} --depth 1`, { stdio: 'inherit' })
     }

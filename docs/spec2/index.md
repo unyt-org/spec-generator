@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Explore the Specification
-      link: /toc
+      link: /README
 features:
   - title: Open Standard
     details: An open, community-driven specification with a focus on web technologies and cross-platform support.
