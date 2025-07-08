@@ -152,14 +152,25 @@
 
 #local-search {
   width: 250px;
-  
-  & .DocSearch-Button-Keys {
+}
+#local-search .DocSearch-Button-Keys {
     margin-left: auto;
   }
+
+.VPNavBarTitle.has-sidebar {
+  background: var(--unyt-bg-primary);
 }
 
-.VPNavBarTitle {
+.VPSidebar {
+  background: var(--unyt-bg-primary) !important;
+}
+
+.VPSidebar.open {
   background: var(--unyt-bg-primary);
+}
+
+.VPLocalNav.has-sidebar {
+  border-bottom: 1px solid var(--vp-c-divider);
 }
 
 .vp-doc a {
@@ -176,4 +187,16 @@
 
 html.dark .VPNavBar .VPNavBarTitle .VPImage {
   content: url('/transparent.svg');
+}
+
+
+@media (max-width: 768px) {
+  #local-search {
+    width: auto !important; 
+  }
+}
+@media (max-width: 639px) {
+  .vp-adaptive-theme {
+    margin: 16px !important;
+  }
 }
