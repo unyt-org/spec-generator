@@ -1,4 +1,4 @@
-# DATEXPlayground
+# DATEX-Playground
 
 <DatexPlayground />
 

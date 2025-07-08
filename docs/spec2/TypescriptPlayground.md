@@ -1,4 +1,4 @@
-# TypeScriptPlayground
+# TypeScript-Playground
 
 <TypeScriptPlayground />
 
