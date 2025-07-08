@@ -25,7 +25,7 @@ let datexLoaded = false;
 export default {
   name: 'DatexPlayground',
   props: {
-    initialCode: {
+    code: {
       type: String,
       default: `// DATEX Code Example
 		const refA = 5;
@@ -174,7 +174,7 @@ export default {
         if (!datexLoaded) {
           await this.loadDatex();
         }
-		
+
         const moduleCode = `
           (async function() {
             "use strict";
