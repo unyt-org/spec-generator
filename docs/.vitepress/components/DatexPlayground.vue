@@ -12,7 +12,7 @@
     
     <div class="console-output">
       <div class="console-header">Console Output</div>
-      <div ref="console" class="console-content"></div>
+      <pre><code ref="console" class="console-content"></code></pre>
     </div>
   </div>
 </template>
@@ -27,12 +27,9 @@ export default {
   props: {
     code: {
       type: String,
-      default: `// DATEX Code Example
-		const refA = 5;
-		const refB = 5;
-		const refSum = refA + refB;
-
-		console.log(refSum);
+      default: `val refA = 5;
+val refB = 7;
+refA + refB
 		`
     }
   },
@@ -152,7 +149,7 @@ export default {
       const initialTheme = this.currentTheme === 'dark' ? 'customDark' : 'customLight';
 
       monacoEditor = monaco.editor.create(this.$refs.editor, {
-        value: this.initialCode,
+        value: this.code,
         language: 'javascript',
         theme: initialTheme,
         automaticLayout: true,
@@ -170,27 +167,19 @@ export default {
       this.clearConsole();
       
       try {
-        const code = monacoEditor?.getValue() || this.initialCode;
-        
-        if (!datexLoaded) {
-          await this.loadDatex();
-        }
-
-        const moduleCode = `
-          (async function() {
-            "use strict";
-            try {
-              ${code}
-            } catch(e) {
-              console.error('Execution error:', e);
-            }
-          })();
-        `;
-        
-        const fn = new Function(moduleCode);
-        await fn();
-        
-      } catch (error) {
+		const code = monacoEditor?.getValue() || this.code;
+		
+		if (!datexLoaded) {
+		await this.loadDatex();
+		}
+      
+		const result = await Datex.execute(code);
+		
+		if (result !== undefined) {
+		console.log(result);
+		}
+		
+	}  catch (error) {
         console.error('Error:', error);
       } finally {
         this.isRunning = false;
@@ -204,7 +193,6 @@ export default {
         const module = await import('https://esm.sh/@unyt/datex@0.0.4');
         Object.assign(window, module);
         datexLoaded = true;
-
       } catch (error) {
         console.error('Failed to load DATEX library:', error);
         throw error;
@@ -238,10 +226,16 @@ export default {
       return (...args) => {
         this.originalConsole[type](...args);
 
+		const filteredMessages = [
+			'Logger initialized!',
+			'Runtime initialized - Version',
+			'Ignoring Event: localhost'
+		];
+
         const joinedArgs = args.join(' ');
-        if (joinedArgs.includes('Ignoring Event: localhost')) {
-          return; 
-        }
+		if (filteredMessages.some(msg => joinedArgs.includes(msg))) {
+			return;
+		}
         
         const formattedArgs = args.map(arg => {
           if (typeof arg === 'object') {
@@ -301,8 +295,10 @@ export default {
 }
 
 .console-output {
-  flex: 0 0 150px;
   border-top: 1px solid var(--vp-c-divider);
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .console-header {
@@ -311,10 +307,13 @@ export default {
 }
 
 .console-content {
+  display: block;
   padding: 10px;
   overflow-y: auto;
   font-family: monospace;
   font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .console-error { color: #ff4d4f }
