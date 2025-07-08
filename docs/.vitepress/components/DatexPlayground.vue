@@ -45,6 +45,7 @@ export default {
   },
   mounted() {
     this.loadMonacoEditor().catch(console.error);
+	this.loadDatex().catch(console.error);
     this.overrideConsole();
     
     this.$nextTick(() => {

@@ -77,6 +77,8 @@
   --vp-sidebar-bg-color: transparent;
   --vp-c-brand-1: #4caacb;
   --vp-c-bg: var(--unyt-bg-primary);
+
+  --vp-c-gutter: var(--vp-c-divider);
 }
 
 /**
@@ -169,10 +171,6 @@
   background: var(--unyt-bg-primary);
 }
 
-.VPLocalNav.has-sidebar {
-  border-bottom: 1px solid var(--vp-c-divider);
-}
-
 .vp-doc a {
   text-decoration: none;
 
@@ -189,7 +187,6 @@ html.dark .VPNavBar .VPNavBarTitle .VPImage {
   content: url('/transparent.svg');
 }
 
-
 @media (max-width: 768px) {
   #local-search {
     width: auto !important; 
@@ -197,6 +194,6 @@ html.dark .VPNavBar .VPNavBarTitle .VPImage {
 }
 @media (max-width: 639px) {
   .vp-adaptive-theme {
-    margin: 16px !important;
+    margin: 16px 0 !important;
   }
 }
