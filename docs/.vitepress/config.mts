@@ -127,7 +127,7 @@ const vitePressSidebarOptions = {
   capitalizeFirst: true,
   useTitleFromFileHeading: true,
   manualSortFileNameByPriority: ['README.md'],
-  excludePattern: ['toc.md'],
+  excludePattern: ['toc.md', 'overview.md'],
   sortBy: 'asc',
 }
 
