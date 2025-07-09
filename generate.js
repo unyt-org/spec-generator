@@ -57,7 +57,10 @@ function scan(dir) {
       !ignoreFiles.includes(entry.name)
     ) {
       const fullPath = path.join(dir, entry.name);
-      const relativePath = path.relative(docsDir, fullPath).replace(/\\/g, '/');
+      const relativePath = path
+        .relative(docsDir, fullPath)
+        .replace(/\\/g, '/')
+        .replace(/(^|\/)[^/]*?[_-](?=[^/]+\.md$)/g, '$1');
       const title = extractTitle(fullPath);
       
       mdFiles.push({
