@@ -46,7 +46,7 @@ function extractTitle(filePath) {
 
 function scan(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
-  
+
   for (const entry of entries) {
     if (entry.isDirectory()) {
       if (!ignoreDirs.includes(entry.name)) {
@@ -57,13 +57,21 @@ function scan(dir) {
       !ignoreFiles.includes(entry.name)
     ) {
       const fullPath = path.join(dir, entry.name);
-      const relativePath = path
-        .relative(docsDir, fullPath)
-        .replace(/\\/g, '/')
-        .replace(/(^|\/)[^/]*?[_-](?=[^/]+\.md$)/g, '$1');
-      const title = extractTitle(fullPath);
-      
+      const originalName = path.relative(docsDir, fullPath).replace(/\\/g, '/');
+
+      let relativePath = originalName
+        .replace(/(^|\/)[^/]*?[_-](?=[^/]+\.md$)/g, '$1')
+        .replace(/_/g, '-')
+        .toLowerCase();
+
+      let title = extractTitle(fullPath);
+
+      if (relativePath.endsWith('readme.md')) {
+        title = 'Introduction';
+      }
+
       mdFiles.push({
+        originalName,
         path: relativePath,
         title: title
       });
@@ -73,16 +81,16 @@ function scan(dir) {
 moveCustomFiles(customDocsDir, docsDir);
 scan(docsDir);
 
+mdFiles.sort((a, b) => a.originalName.localeCompare(b.originalName));
+
 const readmeIndex = mdFiles.findIndex(file => 
-  file.path.toLowerCase().endsWith('readme.md')
+  file.originalName.toLowerCase().endsWith('readme.md')
 );
 
 let readmeEntry;
 if (readmeIndex !== -1) {
   readmeEntry = mdFiles.splice(readmeIndex, 1)[0];
 }
-
-mdFiles.sort((a, b) => a.path.localeCompare(b.path));
 
 if (readmeEntry) {
   mdFiles.unshift(readmeEntry);
