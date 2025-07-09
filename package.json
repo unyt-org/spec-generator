@@ -3,7 +3,7 @@
     "docs:dev": "npm run docs:prebuild && vitepress dev docs",
     "docs:prebuild": "node generate.js",
     "docs:build": "npm run docs:prebuild && vitepress build docs",
-    "docs:preview": "vitepress preview docs",
+    "docs:preview": "node run update-specs && node run docs:build && vitepress preview docs",
     "update-specs": "node update-specs.mjs && node generate.js"
   },
   "devDependencies": {
