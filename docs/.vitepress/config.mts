@@ -24,7 +24,7 @@ const vitePressOptions = defineConfig({
     ['script',
       {
         defer: '',
-        'data-domain': 'datex.unyt.org', // change
+        'data-domain': 'datex.unyt.org',
         src: 'https://plausible.unyt.org/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js'
       }
     ],
@@ -55,18 +55,8 @@ const vitePressOptions = defineConfig({
         sideBarItemsResolved(items) {
           return items.map(item => {
             if (item.link && item.text) {
-              item.link = item.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/').replace(/_/g, '-').toLowerCase();
-              item.text = item.text.replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '').replace(/_/g, '-').toLowerCase();
-            }
-
-            if ('items' in item && Array.isArray(item.items)) {
-              item.items = item.items.map(sub => {
-                if (sub.link && sub.text) {
-                  sub.link = sub.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/').replace(/_/g, '-').toLowerCase();
-                  sub.text = sub.text.replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '').replace(/_/g, '-').toLowerCase();
-                }
-                return sub;
-              });
+              item.link = item.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/');
+              item.text = item.text.replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '');
             }
 
             return item;
