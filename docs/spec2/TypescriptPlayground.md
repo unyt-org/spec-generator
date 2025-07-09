@@ -1,4 +1,0 @@
-# TypeScript-Playground
-
-<TypeScriptPlayground />
-

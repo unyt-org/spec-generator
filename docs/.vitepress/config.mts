@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitepress'
 import markdownItFootnote from 'markdown-it-footnote'
-// import { withSidebar } from 'vitepress-sidebar'
 import { withPwa } from '@vite-pwa/vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 import timeline from "vitepress-markdown-timeline";
@@ -18,6 +17,8 @@ const vitePressOptions = defineConfig({
   head: [
     ['meta', { property: 'og:title', content: 'DATEX Spec' }],
     ['meta', { property: 'og:description', content: 'Datax specification' }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:image', content: '/datex.png' }],
     ['meta', { property: 'og:url', content: 'https://datex.unyt.org' }],
     ['meta', { property: 'og:type', content: 'website' }],
