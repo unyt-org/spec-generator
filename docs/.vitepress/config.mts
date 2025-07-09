@@ -17,11 +17,14 @@ const vitePressOptions = defineConfig({
   head: [
     ['meta', { property: 'og:title', content: 'DATEX Spec' }],
     ['meta', { property: 'og:description', content: 'Datax specification' }],
-    ['meta', { property: 'og:image:width', content: '1200' }],
-    ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:image', content: '/datex.png' }],
     ['meta', { property: 'og:url', content: 'https://datex.unyt.org' }],
     ['meta', { property: 'og:type', content: 'website' }],
+    
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: '/datex.png' }],
+    ['meta', { name: 'twitter:title', content: 'DATEX Spec' }],
+    ['meta', { name: 'twitter:description', content: 'Datax specification' }],
     ['script',
       {
         defer: '',

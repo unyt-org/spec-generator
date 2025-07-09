@@ -1,13 +1,13 @@
 ---
 layout: home
-title: DATEX Spec
+title: Datex Spec
 hero:
-  name: DATEX
+  name: Datex Specification
   text: The next generation data exchange protocol
   tagline: Secure, real-time, peer-to-peer synchronization
   image:
     src: /transparent.svg
-    alt: DATEX Logo
+    alt: Datex Logo
   actions:
     - theme: brand
       text: Explore the Specification
