@@ -68,7 +68,6 @@ const vitePressOptions = defineConfig({
           });
         },
         path: "/docs/spec",
-        // deletePrefix: /^([0-9]+|[A-Za-z]+[0-9]+)_/,
         titleFromFile: true,
       })
     ]
