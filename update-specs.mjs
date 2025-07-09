@@ -14,7 +14,7 @@ function updateRepo() {
       execSync(`git -C ${TARGET_DIR} reset --hard origin/main`, { stdio: 'inherit' })
       execSync(`git -C ${TARGET_DIR} clean -fd`, { stdio: 'inherit' })
     } else {
-      execSync(`git clone ${SPEC_REPO} ${TARGET_DIR} --depth 1`, { stdio: 'inherit' })
+      execSync(`git clone ${SPEC_REPO} ${TARGET_DIR}`, { stdio: 'inherit' })
     }
   } catch (err) {
     console.error('Failed to update spec repo:', err)

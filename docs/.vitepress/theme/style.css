@@ -185,6 +185,8 @@
   gap: 1rem;
 }
 
+
+
 .VPNavBar .VPNavBarTitle .VPImage {
   content: url('/transparent-dark.png');
 }
@@ -201,5 +203,9 @@ html.dark .VPNavBar .VPNavBarTitle .VPImage {
 @media (max-width: 639px) {
   .vp-adaptive-theme {
     margin: 16px 0 !important;
+  }
+  .vp-code-group .tabs {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }

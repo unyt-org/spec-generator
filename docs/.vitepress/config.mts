@@ -119,7 +119,9 @@ const vitePressSidebarOptions = {
   useTitleFromFileHeading: true,
   manualSortFileNameByPriority: ['README.md'],
   excludePattern: ['toc.md', 'overview.md'],
+  sortMenusByFileDatePrefix: true, 
   sortBy: 'asc',
+  returnSidebarData: true,
 }
 
 export default withPwa(
