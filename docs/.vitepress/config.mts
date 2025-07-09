@@ -10,11 +10,15 @@ const vitePressOptions = defineConfig({
   title: 'DATEX Spec',
   srcDir: './spec',
   outDir: './.vitepress/dist',
+  // rewrites: {
+  //   ':prefix([A-Za-z0-9]+)_:slug(.+).md': ':slug.md'
+  // },
+  cleanUrls: true,
   head: [
     ['script',
       {
         defer: '',
-        'data-domain': 'unyt.org', // change
+        'data-domain': 'datex.unyt.org', // change
         src: 'https://plausible.unyt.org/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js'
       }
     ],
@@ -119,7 +123,6 @@ const vitePressSidebarOptions = {
   useTitleFromFileHeading: true,
   manualSortFileNameByPriority: ['README.md'],
   excludePattern: ['toc.md', 'overview.md'],
-  sortMenusByFileDatePrefix: true, 
   sortBy: 'asc',
   returnSidebarData: true,
 }
