@@ -69,6 +69,7 @@ const vitePressOptions = defineConfig({
         },
         path: "/docs/spec",
         titleFromFile: true,
+        ignoreList: ['toc.md', 'overview.md', 'contributor.md', 'index.md'],
       })
     ]
   },
