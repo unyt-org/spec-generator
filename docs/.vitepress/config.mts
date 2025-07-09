@@ -1,18 +1,19 @@
 import { defineConfig } from 'vitepress'
 import markdownItFootnote from 'markdown-it-footnote'
-import { withSidebar } from 'vitepress-sidebar'
+// import { withSidebar } from 'vitepress-sidebar'
 import { withPwa } from '@vite-pwa/vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 import timeline from "vitepress-markdown-timeline";
+import AutoSidebar from 'vite-plugin-vitepress-auto-sidebar'
 
 const vitePressOptions = defineConfig({
   base: '/',
   title: 'DATEX Spec',
   srcDir: './spec',
   outDir: './.vitepress/dist',
-  // rewrites: {
-  //   ':prefix([A-Za-z0-9]+)_:slug(.+).md': ':slug.md'
-  // },
+  rewrites: {
+    ':prefix([A-Za-z0-9]+)_:slug(.+).md': ':slug.md'
+  },
   cleanUrls: true,
   head: [
     ['script',
@@ -44,18 +45,38 @@ const vitePressOptions = defineConfig({
   vite: {
     publicDir: '../public',
     plugins: [
-      groupIconVitePlugin()
+      groupIconVitePlugin(),
+      AutoSidebar({
+        sideBarItemsResolved(items) {
+          return items.map(item => {
+            if (item.link && item.text) {
+              item.link = item.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/');
+              item.text = item.text.replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '');
+            }
+
+            if ('items' in item && Array.isArray(item.items)) {
+              item.items = item.items.map(sub => {
+                if (sub.link && sub.text) {
+                  sub.link = sub.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/');
+                  sub.text = sub.text.replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '');
+                }
+                return sub;
+              });
+            }
+
+            return item;
+          });
+        },
+        path: "/docs/spec",
+        // deletePrefix: /^([0-9]+|[A-Za-z]+[0-9]+)_/,
+        titleFromFile: true,
+      })
     ]
   },
   lastUpdated: true,
   pwa: {
     outDir: '../.vitepress/dist',
     registerType: 'autoUpdate',
-    // includeAssets: [
-    // 'favicon.ico',
-    // 'apple-touch-icon.png',
-    // 'mask-icon.svg'
-    // ],
     manifest: {
       name: 'DATEX Spec',
       short_name: 'DATEX',
@@ -114,19 +135,4 @@ const vitePressOptions = defineConfig({
   }
 })
 
-const vitePressSidebarOptions = {
-  documentRootPath: '/docs/spec',
-  baseRoute: '/',
-  scanStartPath: '/', 
-  collapsed: false,
-  capitalizeFirst: true,
-  useTitleFromFileHeading: true,
-  manualSortFileNameByPriority: ['README.md'],
-  excludePattern: ['toc.md', 'overview.md'],
-  sortBy: 'asc',
-  returnSidebarData: true,
-}
-
-export default withPwa(
-  withSidebar(vitePressOptions, vitePressSidebarOptions)
-)
+export default withPwa(vitePressOptions)
