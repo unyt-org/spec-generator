@@ -7,7 +7,7 @@ import AutoSidebar from 'vite-plugin-vitepress-auto-sidebar'
 
 const vitePressOptions = defineConfig({
   base: '/',
-  title: 'DATEX Spec',
+  title: 'Datex Specification',
   srcDir: './spec',
   outDir: './.vitepress/dist',
   rewrites: {
@@ -15,7 +15,7 @@ const vitePressOptions = defineConfig({
   },
   cleanUrls: true,
   head: [
-    ['meta', { property: 'og:title', content: 'DATEX Spec' }],
+    ['meta', { property: 'og:title', content: 'Datex Specification' }],
     ['meta', { property: 'og:description', content: 'Datax Specification' }],
     ['meta', { property: 'og:image', content: '/datex.png' }],
     ['meta', { property: 'og:url', content: 'https://datex.unyt.org' }],
@@ -23,7 +23,7 @@ const vitePressOptions = defineConfig({
 
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:image', content: '/datex.png' }],
-    ['meta', { name: 'twitter:title', content: 'DATEX Spec' }],
+    ['meta', { name: 'twitter:title', content: 'Datex Specification' }],
     ['meta', { name: 'twitter:description', content: 'Datax Specification' }],
     ['script',
       {
