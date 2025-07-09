@@ -10,8 +10,9 @@ const vitePressOptions = defineConfig({
   title: 'Datex Specification',
   srcDir: './spec',
   outDir: './.vitepress/dist',
-  rewrites: {
-    ':prefix([A-Za-z0-9]+)_:slug(.+).md': ':slug.md'
+  rewrites(id) {
+    let newId = id.replace(/^[A-Za-z0-9]+_/, '').replace(/_/g, '-').toLocaleLowerCase();
+    return newId;
   },
   cleanUrls: true,
   head: [
@@ -57,14 +58,24 @@ const vitePressOptions = defineConfig({
       groupIconVitePlugin(),
       AutoSidebar({
         sideBarItemsResolved(items) {
-          return items.map(item => {
+          const processedItems =  items.map(item => {
             if (item.link && item.text) {
-              item.link = item.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/');
+              item.link = item.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/').replace(/_/g, '-').toLowerCase();
               item.text = item.text.replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '');
             }
 
             return item;
           });
+          const readmeIndex = processedItems.findIndex(item => 
+            item.link && item.link.toLowerCase().includes('readme')
+          );
+          
+          if (readmeIndex !== -1) {
+            const readmeItem = processedItems.splice(readmeIndex, 1)[0];
+            readmeItem.text = 'Introduction';
+            processedItems.unshift(readmeItem);
+          }
+          return processedItems;
         },
         path: "/docs/spec",
         titleFromFile: true,
