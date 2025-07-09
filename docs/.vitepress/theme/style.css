@@ -179,6 +179,12 @@
   }
 }
 
+.VPFooter .message{
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
 .VPNavBar .VPNavBarTitle .VPImage {
   content: url('/transparent-dark.png');
 }
