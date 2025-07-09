@@ -99,16 +99,6 @@ const vitePressOptions = defineConfig({
       { icon: 'github', link: 'https://github.com/unyt-org/datex-specification' }
     ],
     footer: {
-      // message: `
-      //   <div style="display: flex; flex-direction: row; gap: 1rem;">
-      //     <span>© ${new Date().getFullYear()} unyt.org e.V.</span>
-      //     <div style="display: flex; justify-content: center; gap: 1rem;">
-      //       <a href="https://unyt.org/terms-of-service" target="_blank">Terms</a>
-      //       <a href="https://unyt.org/privacy" target="_blank">Privacy</a>
-      //       <a href="https://unyt.org/legal-notice" target="_blank">Legal</a>
-      //     </div>  
-      //   </div>
-      // `
       message: `© ${new Date().getFullYear()} unyt.org e.V. | <a href="https://unyt.org/terms-of-service" target="_blank">Terms</a> | <a href="https://unyt.org/privacy" target="_blank">Privacy</a> | <a href="https://unyt.org/legal-notice" target="_blank">Legal</a>`
     },
     editLink: {
