@@ -16,6 +16,11 @@ const vitePressOptions = defineConfig({
   },
   cleanUrls: true,
   head: [
+    ['meta', { property: 'og:title', content: 'DATEX Spec' }],
+    ['meta', { property: 'og:description', content: 'Datax specification' }],
+    ['meta', { property: 'og:image', content: '/datex.png' }],
+    ['meta', { property: 'og:url', content: 'https://datex.unyt.org' }],
+    ['meta', { property: 'og:type', content: 'website' }],
     ['script',
       {
         defer: '',
