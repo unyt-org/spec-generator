@@ -2,7 +2,7 @@
 layout: home
 title: Datex Spec
 hero:
-  name: Datex Specification
+  name: DATEX
   text: The next generation data exchange protocol
   tagline: Secure, real-time, peer-to-peer synchronization
   image:
