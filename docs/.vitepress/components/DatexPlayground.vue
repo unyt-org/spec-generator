@@ -1,7 +1,13 @@
 <template>
   <div class="playground-container">
     <div class="editor-container">
-      <div id="monaco-editor" ref="editor" class="editor"></div>
+      <VueMonacoEditor
+        v-model:value="code"
+        :language="language"
+        :theme="currentTheme === 'dark' ? 'customDark' : 'customLight'"
+        :options="editorOptions"
+        @mount="handleEditorMount"
+      />
     </div>
     
     <div class="controls">
@@ -18,107 +24,55 @@
 </template>
 
 <script>
-let monacoLoaded = false;
-let monacoEditor = null;
-let datexLoaded = false;
-const editorInstances = {};
+import { loader } from '@guolao/vue-monaco-editor'
+import { ref, shallowRef, onMounted, onBeforeUnmount } from 'vue'
+import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
+
+loader.config({
+  paths: {
+    vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.36.1/min/vs'
+  }
+})
 
 export default {
   name: 'DatexPlayground',
+  components: {
+    VueMonacoEditor
+  },
   props: {
-  code: String,
-  editorId: {
-    type: String,
-    required: false
-  }
-},
-  data() {
-    return {
-      isRunning: false,
-      output: '',
-      currentTheme: 'light',
-      internalEditorId: this.editorId || `editor-${Math.random().toString(36).substr(2, 8)}`
+    code: {
+      type: String,
+    },
+    editorId: {
+      type: String,
+      required: false
     }
   },
-  mounted() {
-    this.loadMonacoEditor().catch(console.error);
-	this.loadDatex().catch(console.error);
-    this.overrideConsole();
+  setup(props) {
+    const code = ref(props.code)
+    const isRunning = ref(false)
+    const consoleRef = ref(null)
+    const editorRef = shallowRef(null)
+    const currentTheme = ref('light')
+    const language = ref('javascript')
+    const originalConsole = {
+      log: console.log,
+      error: console.error,
+      warn: console.warn,
+      info: console.info
+    }
     
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this.detectTheme();
-        this.watchThemeChanges();
-      }, 100);
-    });
-  },
-  beforeUnmount() {
-    this.restoreConsole();
-    if (this.observers) {
-      this.observers.forEach(observer => observer.disconnect());
+    const editorOptions = {
+      automaticLayout: true,
+      minimap: { enabled: false },
+      scrollBeyondLastLine: false,
+      fontSize: 14,
+      lineNumbersMinChars: 3
     }
-  },
-  methods: {
-    detectTheme() {
-      const isDark = document.documentElement.classList.contains('dark')
-      const newTheme = isDark ? 'dark' : 'light';
+
+    const handleEditorMount = (editor, monaco) => {
+      editorRef.value = editor
       
-      if (this.currentTheme !== newTheme) {
-        this.currentTheme = newTheme;
-        this.updateEditorTheme();
-      }
-    },
-
-    watchThemeChanges() {
-      const checkDarkMode = () => {
-        this.currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-        this.updateEditorTheme();
-      };
-      this.themeObserver = new MutationObserver(checkDarkMode);
-  
-      this.themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
-      });
-    },
-
-    updateEditorTheme() {
-      if (monacoEditor) {
-        const theme = this.currentTheme === 'dark' ? 'customDark' : 'customLight';
-        monaco.editor.setTheme(theme);
-      }
-    },
-
-    async loadMonacoEditor() {
-      if (monacoLoaded) {
-        this.createEditor();
-        return;
-      }
-
-      await new Promise((resolve) => {
-        const loaderScript = document.createElement('script');
-        loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js';
-        loaderScript.onload = () => {
-          window.require.config({
-            paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' }
-          });
-          window.require(['vs/editor/editor.main'], () => {
-            monacoLoaded = true;
-            this.createEditor();
-            resolve();
-          });
-        };
-        document.head.appendChild(loaderScript);
-      });
-    },
-
-    createEditor() {
-      if (!this.$refs.editor) return;
-      
-      if (monacoEditor) {
-        monacoEditor.dispose();
-      }
-
       monaco.editor.defineTheme('customDark', {
         base: 'vs-dark',
         inherit: true,
@@ -131,7 +85,7 @@ export default {
           'editor.background': '#161618',
           'editor.lineHighlightBackground': '#2d2d30',
         }
-      });
+      })
 
       monaco.editor.defineTheme('customLight', {
         base: 'vs',
@@ -143,123 +97,114 @@ export default {
         colors: {
           'editor.background': '#ffffff'
         }
-      });
+      })
+    }
+    const executeCode = async () => {
+      isRunning.value = true
+      clearConsole()
 
-      this.detectTheme();
-      const initialTheme = this.currentTheme === 'dark' ? 'customDark' : 'customLight';
+      console.log = consoleInterceptor('log')
+      console.error = consoleInterceptor('error')
+      console.warn = consoleInterceptor('warn')
+      console.info = consoleInterceptor('info')
 
-      monacoEditor = monaco.editor.create(this.$refs.editor, {
-        value: this.code,
-        language: 'javascript',
-        theme: initialTheme,
-        automaticLayout: true,
-        minimap: { enabled: false },
-      });
-      editorInstances[this.internalEditorId] = monacoEditor;
-
-      setTimeout(() => {
-        this.detectTheme();
-        this.updateEditorTheme();
-      }, 200);
-    },
-
-    async executeCode() {
-      this.isRunning = true;
-      this.clearConsole();
-      
       try {
-        const editor = editorInstances[this.internalEditorId];
-        const code = editor?.getValue() || this.code;
-
-
-		
-        if (!datexLoaded) {
-        await this.loadDatex();
+        if (!window.Datex) {
+          await loadDatex()
         }
-          
-        const result = await Datex.execute(code);
-        if (result !== undefined) console.log(result);
-        
-		
-	    }  catch (error) {
-        console.error('Error:', error);
-      } finally {
-        this.isRunning = false;
-      }
-    },
 
-    async loadDatex() {
-      if (datexLoaded) return;
-      
-      try {
-        const module = await import('https://esm.sh/@unyt/datex@0.0.4');
-        Object.assign(window, module);
-        datexLoaded = true;
+        const result = await Datex.execute(code.value)
+        if (result !== undefined) console.log(result)
+
       } catch (error) {
-        console.error('Failed to load DATEX library:', error);
-        throw error;
+        console.error('Error:', error)
+      } finally {
+        console.log = originalConsole.log
+        console.error = originalConsole.error
+        console.warn = originalConsole.warn
+        console.info = originalConsole.info
+        isRunning.value = false
       }
-    },
+    }
 
-    overrideConsole() {
-      this.originalConsole = {
-        log: console.log,
-        error: console.error,
-        warn: console.warn,
-        info: console.info
-      };
-      
-      console.log = this.consoleInterceptor('log');
-      console.error = this.consoleInterceptor('error');
-      console.warn = this.consoleInterceptor('warn');
-      console.info = this.consoleInterceptor('info');
-    },
-    
-    restoreConsole() {
-      if (this.originalConsole) {
-        console.log = this.originalConsole.log;
-        console.error = this.originalConsole.error;
-        console.warn = this.originalConsole.warn;
-        console.info = this.originalConsole.info;
+    const loadDatex = async () => {
+      try {
+        const module = await import('https://esm.sh/@unyt/datex@0.0.4')
+        Object.assign(window, module)
+        return true
+      } catch (error) {
+        console.error('Failed to load DATEX library:', error)
+        throw error
       }
-    },
-    
-    consoleInterceptor(type) {
+    }
+
+    const consoleInterceptor = (type) => {
       return (...args) => {
-        this.originalConsole[type](...args);
+        originalConsole[type](...args)
 
-		const filteredMessages = [
-			'Logger initialized!',
-			'Runtime initialized - Version',
-			'Ignoring Event: localhost'
-		];
+        const filteredMessages = [
+          'Logger initialized!',
+          'Runtime initialized - Version',
+          'Ignoring Event: localhost'
+        ]
 
-        const joinedArgs = args.join(' ');
-		if (filteredMessages.some(msg => joinedArgs.includes(msg))) {
-			return;
-		}
-        
+        const joinedArgs = args.join(' ')
+        if (filteredMessages.some(msg => joinedArgs.includes(msg))) {
+          return
+        }
+
         const formattedArgs = args.map(arg => {
           if (typeof arg === 'object') {
             try {
-              return JSON.stringify(arg, null, 2);
+              return JSON.stringify(arg, null, 2)
             } catch {
-              return String(arg);
+              return String(arg)
             }
           }
-          return arg;
-        }).join(' ');
-        
-        const message = document.createElement('div');
-        message.className = `console-message console-${type}`;
-        message.textContent = formattedArgs;
-        this.$refs.console.appendChild(message);
-        this.$refs.console.scrollTop = this.$refs.console.scrollHeight;
-      };
-    },
+          return arg
+        }).join(' ')
 
-    clearConsole() {
-      this.$refs.console.innerHTML = '';
+        if (consoleRef.value) {
+          const message = document.createElement('div')
+          message.className = `console-message console-${type}`
+          message.textContent = formattedArgs
+          consoleRef.value.appendChild(message)
+          consoleRef.value.scrollTop = consoleRef.value.scrollHeight
+        }
+      }
+    }
+
+    const clearConsole = () => {
+      if (consoleRef.value) {
+        consoleRef.value.innerHTML = ''
+      }
+    }
+
+    onMounted(() => {
+      detectTheme()
+      const observer = watchThemeChanges()
+      
+      return () => {
+        observer.disconnect()
+      }
+    })
+
+    onBeforeUnmount(() => {
+      console.log = originalConsole.log
+      console.error = originalConsole.error
+      console.warn = originalConsole.warn
+      console.info = originalConsole.info
+    })
+
+    return {
+      code,
+      isRunning,
+      console: consoleRef,
+      currentTheme,
+      language,
+      editorOptions,
+      executeCode,
+      handleEditorMount,
     }
   }
 }
@@ -280,10 +225,6 @@ export default {
   min-height: 200px;
 }
 
-.editor {
-  height: 100%;
-}
-
 .controls {
   padding: 10px;
   border-top: 1px solid var(--vp-c-divider);
@@ -294,6 +235,13 @@ export default {
   color: white;
   padding: 8px 16px;
   border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.run-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .console-output {
@@ -306,6 +254,8 @@ export default {
 .console-header {
   padding: 8px 16px;
   font-weight: 600;
+  background: var(--vp-c-bg-soft);
+  border-bottom: 1px solid var(--vp-c-divider);
 }
 
 .console-content {
@@ -316,6 +266,7 @@ export default {
   font-size: 13px;
   white-space: pre-wrap;
   word-break: break-word;
+  margin: 0;
 }
 
 .console-error { color: #ff4d4f }
