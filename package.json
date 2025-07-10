@@ -13,8 +13,10 @@
   },
   "type": "module",
   "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.5",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-mathjax3": "^4.3.2",
+    "vite-plugin-pwa": "^1.0.1",
     "vite-plugin-vitepress-auto-sidebar": "^1.7.1",
     "vitepress-markdown-timeline": "^1.2.2",
     "vitepress-plugin-codeblocks-fold": "^1.2.35",
