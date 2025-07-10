@@ -21,19 +21,23 @@
 let monacoLoaded = false;
 let monacoEditor = null;
 let datexLoaded = false;
+const editorInstances = {};
 
 export default {
   name: 'DatexPlayground',
   props: {
-    code: {
-      type: String,
-    }
-  },
+  code: String,
+  editorId: {
+    type: String,
+    required: false
+  }
+},
   data() {
     return {
       isRunning: false,
       output: '',
-      currentTheme: 'light'
+      currentTheme: 'light',
+      internalEditorId: this.editorId || `editor-${Math.random().toString(36).substr(2, 8)}`
     }
   },
   mounted() {
@@ -151,6 +155,7 @@ export default {
         automaticLayout: true,
         minimap: { enabled: false },
       });
+      editorInstances[this.internalEditorId] = monacoEditor;
 
       setTimeout(() => {
         this.detectTheme();
@@ -163,19 +168,20 @@ export default {
       this.clearConsole();
       
       try {
-		const code = monacoEditor?.getValue() || this.code;
+        const editor = editorInstances[this.internalEditorId];
+        const code = editor?.getValue() || this.code;
+
+
 		
-		if (!datexLoaded) {
-		await this.loadDatex();
-		}
-      
-		const result = await Datex.execute(code);
+        if (!datexLoaded) {
+        await this.loadDatex();
+        }
+          
+        const result = await Datex.execute(code);
+        if (result !== undefined) console.log(result);
+        
 		
-		if (result !== undefined) {
-		console.log(result);
-		}
-		
-	}  catch (error) {
+	    }  catch (error) {
         console.error('Error:', error);
       } finally {
         this.isRunning = false;
