@@ -27,10 +27,6 @@ export default {
   props: {
     code: {
       type: String,
-      default: `val refA = 5;
-val refB = 7;
-refA + refB
-		`
     }
   },
   data() {
