@@ -16,7 +16,7 @@
       </button>
     </div>
     
-    <div class="console-output">
+    <div class="console-output" v-if="hasExecuted">
       <div class="console-header">Console Output</div>
       <pre><code ref="console" class="console-content"></code></pre>
     </div>
@@ -53,6 +53,7 @@ export default {
     const code = ref(props.code)
     const isRunning = ref(false)
     const consoleRef = ref(null)
+    const hasExecuted = ref(false)
     const editorRef = shallowRef(null)
     // const datexLoaded = ref(false);
     const currentTheme = ref('light')
@@ -102,6 +103,7 @@ export default {
       })
     }
     const executeCode = async () => {
+      hasExecuted.value = true
       isRunning.value = true
       clearConsole()
 
@@ -206,8 +208,10 @@ export default {
       currentTheme,
       language,
       editorOptions,
+      hasExecuted,
       executeCode,
       handleEditorMount,
+
     }
   }
 }

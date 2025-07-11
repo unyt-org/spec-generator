@@ -16,6 +16,7 @@
   --unyt-bg-primary-selected: #bbbbbb;
   --unyt-bg-secondary: #f6f6f6;
   --unyt-bg-controls: #ffffff;
+  --unyt-bg-controls-hover: #646464;
   --unyt-bg-alert: #eeeeee;
 
   /* Border */
@@ -40,6 +41,7 @@
   --unyt-bg-primary-selected: #3a3a3a;
   --unyt-bg-secondary: #1b1b1b;
   --unyt-bg-controls: #212121;
+  --unyt-bg-controls-hover: #2c2c2c;
   --unyt-bg-alert: #2b2b2b;
 
   /* Border */

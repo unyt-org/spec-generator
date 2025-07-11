@@ -170,7 +170,15 @@
 .VPSidebar.open {
   background: var(--unyt-bg-primary);
 }
+.VPButton.medium.brand {
+  color: var(--unyt-text-primary);
+  background-color: var(--unyt-bg-controls);
+  border: 1px solid var(--unyt-border-primary);
+}
 
+.VPButton.medium.brand:hover {
+  background-color: var(--unyt-bg-controls-hover);
+}
 .vp-doc a {
   text-decoration: none;
 
