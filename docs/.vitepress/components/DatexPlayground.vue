@@ -27,6 +27,7 @@
 import { loader } from '@guolao/vue-monaco-editor'
 import { ref, shallowRef, onMounted, onBeforeUnmount } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
+// let datexLoaded = false; 
 
 loader.config({
   paths: {
@@ -53,6 +54,7 @@ export default {
     const isRunning = ref(false)
     const consoleRef = ref(null)
     const editorRef = shallowRef(null)
+    // const datexLoaded = ref(false);
     const currentTheme = ref('light')
     const language = ref('javascript')
     const originalConsole = {
@@ -110,7 +112,8 @@ export default {
 
       try {
         if (!window.Datex) {
-          await loadDatex()
+          // await loadDatex();
+          throw new Error("DATEX not loaded")
         }
 
         const result = await Datex.execute(code.value)
@@ -127,16 +130,18 @@ export default {
       }
     }
 
-    const loadDatex = async () => {
-      try {
-        const module = await import('https://esm.sh/@unyt/datex@0.0.4')
-        Object.assign(window, module)
-        return true
-      } catch (error) {
-        console.error('Failed to load DATEX library:', error)
-        throw error
-      }
-    }
+    // const loadDatex = async () => {
+    //   if (datexLoaded.value) return true;
+    //   try {
+    //     const module = await import('https://esm.sh/@unyt/datex@0.0.4')
+    //     Object.assign(window, module)
+    //     datexLoaded.value = true;
+    //     return true
+    //   } catch (error) {
+    //     console.error('Failed to load DATEX library:', error)
+    //     throw error
+    //   }
+    // }
 
     const consoleInterceptor = (type) => {
       return (...args) => {
@@ -181,9 +186,7 @@ export default {
     }
 
     onMounted(() => {
-      detectTheme()
-      const observer = watchThemeChanges()
-      
+      // await loadDatex()
       return () => {
         observer.disconnect()
       }
