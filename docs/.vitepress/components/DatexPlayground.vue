@@ -1,6 +1,6 @@
 <template>
   <div class="playground-container">
-    <div class="editor-container">
+    <div class="editor-container" :style="{ height: editorHeight + 'px' }">
       <VueMonacoEditor
         v-model:value="code"
         :language="language"
@@ -25,7 +25,7 @@
 
 <script>
 import { loader } from '@guolao/vue-monaco-editor'
-import { ref, shallowRef, onMounted, onBeforeUnmount } from 'vue'
+import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 
 loader.config({
@@ -56,6 +56,7 @@ export default {
     const editorRef = shallowRef(null)
     const currentTheme = ref('light')
     const language = ref('javascript')
+    const editorHeight = ref(300)
     const originalConsole = {
       log: console.log,
       error: console.error,
@@ -68,7 +69,23 @@ export default {
       minimap: { enabled: false },
       scrollBeyondLastLine: false,
       fontSize: 14,
-      lineNumbersMinChars: 3
+      lineNumbersMinChars: 3,
+      wordWrap: 'on'
+    }
+
+    const calculateEditorHeight = () => {
+      if (!editorRef.value) return
+      
+      const lineHeight = 19
+      const padding = 20
+      const lineCount = code.value.split('\n').length
+      const calculatedHeight = Math.max(300, lineCount * lineHeight + padding)
+      
+      editorHeight.value = calculatedHeight
+      
+      nextTick(() => {
+        editorRef.value?.layout()
+      })
     }
 
     const handleEditorMount = (editor, monaco) => {
@@ -99,7 +116,13 @@ export default {
           'editor.background': '#ffffff'
         }
       })
+      
       updateEditorTheme()
+      calculateEditorHeight()
+      
+      editor.onDidChangeModelContent(() => {
+        calculateEditorHeight()
+      })
     }
 
     const detectTheme = () => {
@@ -199,6 +222,13 @@ export default {
       }
     }
 
+    watch(() => props.code, (newCode) => {
+      code.value = newCode
+      nextTick(() => {
+        calculateEditorHeight()
+      })
+    }, { immediate: true })
+
     onMounted(() => {
       detectTheme()
       const observer = watchThemeChanges()
@@ -222,9 +252,9 @@ export default {
       language,
       editorOptions,
       hasExecuted,
+      editorHeight,
       executeCode,
       handleEditorMount,
-
     }
   }
 }
@@ -234,20 +264,20 @@ export default {
 .playground-container {
   display: flex;
   flex-direction: column;
-  height: 600px; 
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-code-block-bg);
 }
 
 .editor-container {
-  flex: 1;
-  min-height: 200px;
+  min-height: 300px;
+  overflow: hidden;
 }
 
 .controls {
   padding: 10px;
   border-top: 1px solid var(--vp-c-divider);
+  flex-shrink: 0;
 }
 
 .run-button {
@@ -270,7 +300,8 @@ export default {
   overflow-y: auto;
   resize: vertical;
   min-height: 100px;
-  max-height: none;
+  max-height: 400px;
+  flex-shrink: 0;
 }
 
 .console-header {
