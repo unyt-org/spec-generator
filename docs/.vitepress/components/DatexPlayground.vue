@@ -1,14 +1,16 @@
 <template>
   <div class="playground-container">
-    <div class="editor-container" :style="{ height: editorHeight + 'px' }">
-      <VueMonacoEditor
-        v-model:value="code"
-        :language="language"
-        :theme="currentTheme === 'dark' ? 'customDark' : 'customLight'"
-        :options="editorOptions"
-        @mount="handleEditorMount"
-      />
-    </div>  
+    <client-only>
+      <div class="editor-container" :style="{ height: editorHeight + 'px' }">
+        <VueMonacoEditor
+          v-model:value="code"
+          :language="language"
+          :theme="currentTheme === 'dark' ? 'customDark' : 'customLight'"
+          :options="editorOptions"
+          @mount="handleEditorMount"
+        />
+      </div>  
+    </client-only>
 
     <div class="controls">
       <button @click="executeCode" :disabled="isRunning" class="run-button">
@@ -24,15 +26,9 @@
 </template>
 
 <script>
-import { loader } from '@guolao/vue-monaco-editor'
 import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 
-loader.config({
-  paths: {
-    vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.36.1/min/vs'
-  }
-})
 
 export default {
   name: 'DatexPlayground',
@@ -77,7 +73,7 @@ export default {
       if (!editorRef.value) return
       
       const lineHeight = 19
-      const padding = 20
+      const padding = 20 
       const lineCount = code.value.split('\n').length
       const calculatedHeight = Math.max(300, lineCount * lineHeight + padding)
       

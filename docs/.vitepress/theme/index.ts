@@ -15,14 +15,16 @@ import codeblocksFold from 'vitepress-plugin-codeblocks-fold'
 import 'vitepress-plugin-codeblocks-fold/style/index.css'
 import "vitepress-markdown-timeline/dist/theme/index.css";
 
-import('https://esm.sh/@unyt/datex@0.0.4')
-  .then(module => {
-    Object.assign(window, module)
-    console.log('DATEX loaded globally')
-  })
-  .catch(error => {
-    console.error('Failed to load DATEX:', error)
-  })
+if (typeof window !== 'undefined') {
+  import('https://esm.sh/@unyt/datex@0.0.4')
+    .then(module => {
+      Object.assign(window, module)
+      console.log('DATEX loaded globally')
+    })
+    .catch(error => {
+      console.error('Failed to load DATEX:', error)
+    })
+}
 
 export default {
   extends: DefaultTheme,
