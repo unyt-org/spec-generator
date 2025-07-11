@@ -8,8 +8,8 @@
         :options="editorOptions"
         @mount="handleEditorMount"
       />
-    </div>
-    
+    </div>  
+
     <div class="controls">
       <button @click="executeCode" :disabled="isRunning" class="run-button">
         {{ isRunning ? 'Running...' : 'Run DATEX Code' }}
@@ -221,7 +221,7 @@ export default {
 .playground-container {
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 600px; 
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-code-block-bg);
@@ -254,8 +254,10 @@ export default {
 .console-output {
   border-top: 1px solid var(--vp-c-divider);
   padding: 0;
-  max-height: 200px;
   overflow-y: auto;
+  resize: vertical;
+  min-height: 100px;
+  max-height: none;
 }
 
 .console-header {
