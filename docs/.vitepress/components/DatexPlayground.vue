@@ -27,7 +27,6 @@
 import { loader } from '@guolao/vue-monaco-editor'
 import { ref, shallowRef, onMounted, onBeforeUnmount } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
-// let datexLoaded = false; 
 
 loader.config({
   paths: {
@@ -55,7 +54,6 @@ export default {
     const consoleRef = ref(null)
     const hasExecuted = ref(false)
     const editorRef = shallowRef(null)
-    // const datexLoaded = ref(false);
     const currentTheme = ref('light')
     const language = ref('javascript')
     const originalConsole = {
@@ -101,7 +99,35 @@ export default {
           'editor.background': '#ffffff'
         }
       })
+      updateEditorTheme()
     }
+
+    const detectTheme = () => {
+      const isDark = document.documentElement.classList.contains('dark')
+      currentTheme.value = isDark ? 'dark' : 'light'
+      updateEditorTheme()
+    }
+
+    const watchThemeChanges = () => {
+      const observer = new MutationObserver(() => {
+        detectTheme()
+      })
+      
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+      })
+      
+      return observer
+    }
+
+    const updateEditorTheme = () => {
+      if (editorRef.value) {
+        const theme = currentTheme.value === 'dark' ? 'customDark' : 'customLight'
+        editorRef.value.updateOptions({ theme })
+      }
+    }
+
     const executeCode = async () => {
       hasExecuted.value = true
       isRunning.value = true
@@ -114,7 +140,6 @@ export default {
 
       try {
         if (!window.Datex) {
-          // await loadDatex();
           throw new Error("DATEX not loaded")
         }
 
@@ -131,19 +156,6 @@ export default {
         isRunning.value = false
       }
     }
-
-    // const loadDatex = async () => {
-    //   if (datexLoaded.value) return true;
-    //   try {
-    //     const module = await import('https://esm.sh/@unyt/datex@0.0.4')
-    //     Object.assign(window, module)
-    //     datexLoaded.value = true;
-    //     return true
-    //   } catch (error) {
-    //     console.error('Failed to load DATEX library:', error)
-    //     throw error
-    //   }
-    // }
 
     const consoleInterceptor = (type) => {
       return (...args) => {
@@ -188,7 +200,8 @@ export default {
     }
 
     onMounted(() => {
-      // await loadDatex()
+      detectTheme()
+      const observer = watchThemeChanges()
       return () => {
         observer.disconnect()
       }
