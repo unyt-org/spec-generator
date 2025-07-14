@@ -151,6 +151,9 @@
 /**
  * General Design
  * -------------------------------------------------------------------------- */
+ul, ol {
+  padding-left: 2em !important;
+}
 
 #local-search {
   width: 250px;
