@@ -16,7 +16,7 @@ const vitePressOptions = defineConfig({
   },
   cleanUrls: true,
   head: [
-    ['meta', { property: 'og:title', content: 'Datex Specification' }],
+    ['meta', { property: 'og:title', content: 'DATEX Specification' }],
     ['meta', { property: 'og:description', content: 'Datax Specification' }],
     ['meta', { property: 'og:image', content: '/datex.png' }],
     ['meta', { property: 'og:url', content: 'https://datex.unyt.org' }],
@@ -24,7 +24,7 @@ const vitePressOptions = defineConfig({
 
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:image', content: '/datex.png' }],
-    ['meta', { name: 'twitter:title', content: 'Datex Specification' }],
+    ['meta', { name: 'twitter:title', content: 'DATEX Specification' }],
     ['meta', { name: 'twitter:description', content: 'Datax Specification' }],
     ['script',
       {
