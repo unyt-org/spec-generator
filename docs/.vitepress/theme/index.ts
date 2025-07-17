@@ -14,9 +14,6 @@ import { useRoute, useData } from 'vitepress'
 import codeblocksFold from 'vitepress-plugin-codeblocks-fold'
 import 'vitepress-plugin-codeblocks-fold/style/index.css'
 import "vitepress-markdown-timeline/dist/theme/index.css";
-import { registerSW } from 'virtual:pwa-register'
-
-registerSW({ immediate: true })
 
 if (typeof window !== 'undefined') {
   import('https://esm.sh/@unyt/datex@0.0.4')
