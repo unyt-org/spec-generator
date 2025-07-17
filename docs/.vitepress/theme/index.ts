@@ -15,7 +15,7 @@ import codeblocksFold from 'vitepress-plugin-codeblocks-fold'
 import 'vitepress-plugin-codeblocks-fold/style/index.css'
 import "vitepress-markdown-timeline/dist/theme/index.css";
 
-if ('serviceWorker' in navigator) {
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     console.log('New content available, reloading...');
     window.location.reload();
