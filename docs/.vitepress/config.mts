@@ -109,7 +109,8 @@ const vitePressOptions = defineConfig({
       runtimeCaching: [
         {
           urlPattern: ({ request }) => request.destination === 'image',
-          handler: 'CacheFirst',
+          // handler: 'CacheFirst',
+          handler: 'NetworkFirst',
           options: {
             cacheName: 'images-cache',
             expiration: {
