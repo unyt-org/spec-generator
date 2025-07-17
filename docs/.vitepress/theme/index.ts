@@ -16,6 +16,11 @@ import 'vitepress-plugin-codeblocks-fold/style/index.css'
 import "vitepress-markdown-timeline/dist/theme/index.css";
 
 if (typeof window !== 'undefined') {
+  const { registerSW } = await import('virtual:pwa-register');
+  registerSW({ immediate: true });
+}
+
+if (typeof window !== 'undefined') {
   import('https://esm.sh/@unyt/datex@0.0.4')
     .then(module => {
       Object.assign(window, module)
