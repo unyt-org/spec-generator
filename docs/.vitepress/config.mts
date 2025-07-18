@@ -108,8 +108,11 @@ const vitePressOptions = defineConfig({
         }
       ]
     },
-    workbox: {
-      globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        workbox: {
+      globPatterns: [
+        '**/*.{js,css,html,ico,png,jpg,jpeg,gif,webp,svg,woff,woff2,ttf,eot}',
+        'assets/**/*'
+      ],
       runtimeCaching: [
         {
           urlPattern: ({ request }) => request.destination === 'document',
@@ -127,12 +130,32 @@ const vitePressOptions = defineConfig({
           }
         },
         {
-          urlPattern: ({ request }) => request.destination === 'image',
+          urlPattern: ({ request, url }) => {
+            return request.destination === 'image' || 
+                   /\.(png|jpg|jpeg|gif|webp|svg|ico)(\?.*)?$/i.test(url.pathname)
+          },
           handler: 'CacheFirst',
           options: {
             cacheName: 'images-cache',
             expiration: {
-              maxEntries: 100,
+              maxEntries: 200,
+              maxAgeSeconds: 60 * 60 * 24 * 30
+            },
+            cacheableResponse: {
+              statuses: [0, 200]
+            }
+          }
+        },
+        {
+          urlPattern: ({ url }) => {
+            return url.pathname.startsWith('/') && 
+                   /\.(png|jpg|jpeg|gif|webp|svg|ico|css|js|woff|woff2|ttf|eot)(\?.*)?$/i.test(url.pathname)
+          },
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'static-assets',
+            expiration: {
+              maxEntries: 200,
               maxAgeSeconds: 60 * 60 * 24 * 30
             },
             cacheableResponse: {
@@ -144,7 +167,7 @@ const vitePressOptions = defineConfig({
           urlPattern: ({ request }) => request.destination === 'script' || request.destination === 'style',
           handler: 'StaleWhileRevalidate',
           options: {
-            cacheName: 'static-resources',
+            cacheName: 'js-css-cache',
             cacheableResponse: {
               statuses: [0, 200]
             }
@@ -155,6 +178,10 @@ const vitePressOptions = defineConfig({
       clientsClaim: true,
       cleanupOutdatedCaches: true
     },
+    devOptions: {
+      enabled: false,
+      type: 'module'
+    }
   },
   themeConfig: {
     logo: '/transparent.svg',
