@@ -286,6 +286,7 @@ export default {
 
 <style scoped>
 .playground-container {
+  margin: 30px 0;
   display: flex;
   flex-direction: column;
   border-radius: 8px;
