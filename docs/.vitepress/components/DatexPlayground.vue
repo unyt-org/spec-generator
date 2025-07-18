@@ -29,7 +29,6 @@
 import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 
-
 export default {
   name: 'DatexPlayground',
   components: {
@@ -52,7 +51,7 @@ export default {
     const editorRef = shallowRef(null)
     const currentTheme = ref('light')
     const language = ref('javascript')
-    const editorHeight = ref(300)
+    const editorHeight = ref(60)
     const originalConsole = {
       log: console.log,
       error: console.error,
@@ -66,21 +65,35 @@ export default {
       scrollBeyondLastLine: false,
       fontSize: 14,
       lineNumbersMinChars: 3,
-      wordWrap: 'on'
+      wordWrap: 'on',
+      lineNumbers: 'on',
+      scrollbar: {
+        vertical: 'hidden',
+        horizontal: 'hidden',
+        handleMouseWheel: false
+      },
+      overviewRulerLanes: 0,
+      hideCursorInOverviewRuler: true,
+      overviewRulerBorder: false
     }
 
     const calculateEditorHeight = () => {
       if (!editorRef.value) return
       
       const lineHeight = 19
-      const padding = 20 
-      const lineCount = code.value.split('\n').length
-      const calculatedHeight = Math.max(300, lineCount * lineHeight + padding)
+      const padding = 20
+      const lineCount = Math.max(1, code.value.split('\n').length)
+      const minHeight = lineHeight + padding
+      const maxHeight = 400
+      
+      const calculatedHeight = Math.min(maxHeight, Math.max(minHeight, lineCount * lineHeight + padding))
       
       editorHeight.value = calculatedHeight
       
       nextTick(() => {
-        editorRef.value?.layout()
+        if (editorRef.value) {
+          editorRef.value.layout()
+        }
       })
     }
 
@@ -119,6 +132,10 @@ export default {
       editor.onDidChangeModelContent(() => {
         calculateEditorHeight()
       })
+      setTimeout(() => {
+        editor.getModel()?.setValue(code.value)
+        calculateEditorHeight()
+      }, 100)
     }
 
     const detectTheme = () => {
@@ -225,9 +242,20 @@ export default {
       })
     }, { immediate: true })
 
+    watch(code, () => {
+      nextTick(() => {
+        calculateEditorHeight()
+      })
+    })
+
     onMounted(() => {
       detectTheme()
       const observer = watchThemeChanges()
+
+      nextTick(() => {
+        calculateEditorHeight()
+      })
+      
       return () => {
         observer.disconnect()
       }
@@ -263,11 +291,14 @@ export default {
   border-radius: 8px;
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-code-block-bg);
+  overflow: hidden;
 }
 
 .editor-container {
-  min-height: 300px;
+  min-height: 39px;
+  max-height: 400px;
   overflow: hidden;
+  transition: height 0.2s ease-out;
 }
 
 .controls {
@@ -283,6 +314,11 @@ export default {
   border-radius: 4px;
   border: none;
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.run-button:hover:not(:disabled) {
+  opacity: 0.9;
 }
 
 .run-button:disabled {
@@ -305,6 +341,7 @@ export default {
   font-weight: 600;
   background: var(--vp-c-bg-soft);
   border-bottom: 1px solid var(--vp-c-divider);
+  font-size: 14px;
 }
 
 .console-content {
@@ -316,8 +353,29 @@ export default {
   white-space: pre-wrap;
   word-break: break-word;
   margin: 0;
+  line-height: 1.4;
 }
 
-.console-error { color: #ff4d4f }
-.console-warn { color: #faad14 }
+.console-message {
+  margin: 2px 0;
+  padding: 1px 0;
+}
+
+.console-error { 
+  color: #ff4d4f;
+  font-weight: 500;
+}
+
+.console-warn { 
+  color: #faad14;
+  font-weight: 500;
+}
+
+.console-log {
+  color: var(--vp-c-text-1);
+}
+
+.console-info {
+  color: var(--vp-c-text-2);
+}
 </style>
