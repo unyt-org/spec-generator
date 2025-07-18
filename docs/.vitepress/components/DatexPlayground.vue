@@ -28,6 +28,7 @@
 <script>
 import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
+import AnsiToHtml from 'ansi-to-html'
 
 export default {
   name: 'DatexPlayground',
@@ -52,6 +53,7 @@ export default {
     const currentTheme = ref('light')
     const language = ref('javascript')
     const editorHeight = ref(60)
+    const ansiConverter = new AnsiToHtml()
     const originalConsole = {
       log: console.log,
       error: console.error,
@@ -179,7 +181,7 @@ export default {
           throw new Error("DATEX not loaded")
         }
 
-        const result = await Datex.execute(code.value)
+        const result = await Datex.execute(code.value, true)
         if (result !== undefined) console.log(result)
 
       } catch (error) {
@@ -194,8 +196,8 @@ export default {
     }
 
     const consoleInterceptor = (type) => {
-      return (...args) => {
-        originalConsole[type](...args)
+    return (...args) => {
+      originalConsole[type](...args)
 
         const filteredMessages = [
           'Logger initialized!',
@@ -203,31 +205,31 @@ export default {
           'Ignoring Event: localhost'
         ]
 
-        const joinedArgs = args.join(' ')
+      const joinedArgs = args.join(' ')
         if (filteredMessages.some(msg => joinedArgs.includes(msg))) {
           return
         }
 
-        const formattedArgs = args.map(arg => {
-          if (typeof arg === 'object') {
-            try {
-              return JSON.stringify(arg, null, 2)
-            } catch {
-              return String(arg)
-            }
+      const formattedArgs = args.map(arg => {
+        if (typeof arg === 'object') {
+          try {
+            return JSON.stringify(arg, null, 2)
+          } catch {
+            return String(arg)
           }
-          return arg
-        }).join(' ')
-
-        if (consoleRef.value) {
-          const message = document.createElement('div')
-          message.className = `console-message console-${type}`
-          message.textContent = formattedArgs
-          consoleRef.value.appendChild(message)
-          consoleRef.value.scrollTop = consoleRef.value.scrollHeight
         }
+        return String(arg)
+      }).join(' ')
+
+      if (consoleRef.value) {
+        const message = document.createElement('div')
+        message.className = `console-message console-${type}`
+        message.innerHTML = ansiConverter.toHtml(formattedArgs)
+        consoleRef.value.appendChild(message)
+        consoleRef.value.scrollTop = consoleRef.value.scrollHeight
       }
     }
+  }
 
     const clearConsole = () => {
       if (consoleRef.value) {
