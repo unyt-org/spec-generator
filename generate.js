@@ -3,7 +3,7 @@ import path from 'path';
 
 const docsDir = path.resolve('./docs/spec');
 const customDocsDir = path.resolve('./docs/spec2');
-const ignoreFiles = ['index.md', 'contributor.md', 'toc.md', 'overview.md'];
+const ignoreFiles = ['index.md', 'contributor.md', 'toc.md', 'overview.md', 'contributing.md'];
 const ignoreDirs = ['node_modules', '.vitepress', '.git'];
 const mdFiles = [];
 
