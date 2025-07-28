@@ -14,6 +14,7 @@ import { useRoute, useData } from 'vitepress'
 import codeblocksFold from 'vitepress-plugin-codeblocks-fold'
 import 'vitepress-plugin-codeblocks-fold/style/index.css'
 import "vitepress-markdown-timeline/dist/theme/index.css";
+import Layout from './Layout.vue'
 
 if (typeof window !== 'undefined') {
   import('https://esm.sh/@unyt/datex@0.0.4')
@@ -60,7 +61,7 @@ if (typeof window !== 'undefined') {
 export default {
   extends: DefaultTheme,
   Layout: () => {
-    return h(DefaultTheme.Layout, null, {
+    return h(Layout, null, {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
     })
   },
@@ -76,5 +77,5 @@ export default {
 
     imageViewer(route)
     codeblocksFold({ route, frontmatter })
-  }
+  },
 } satisfies Theme
