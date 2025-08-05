@@ -1,27 +1,9 @@
-# DATEX-Playground
+# DATEX Playground
 
-
-<DatexSnippet>
-<pre>
-val refA = 7;
-val refB = 7;
-refA + refB
-</pre>
-</DatexSnippet>
+Try some DATEX code in the playground below:
 
 <DatexSnippet>
 <pre>
-val refA = 1;
-val refB = 2;
-refA + refB
+@example :: "Hello World"
 </pre>
 </DatexSnippet>
-
-<DatexSnippet>
-<pre>
-val refA = 1;
-val refB = 2;
-refA + refB
-</pre>
-</DatexSnippet>
-

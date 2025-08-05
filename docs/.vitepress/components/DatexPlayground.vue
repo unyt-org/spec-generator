@@ -18,9 +18,17 @@
       </button>
     </div>
     
-    <div class="console-output" v-if="hasExecuted">
-      <div class="console-header">Console Output</div>
-      <pre><code ref="console" class="console-content"></code></pre>
+    <div class="console-output" v-if="results.length">
+      <div class="console-header">
+        <div>Result</div>
+        <button @click="results = []" class="clear-console-button">Clear</button>
+      </div>
+      <div class="console-content">
+        <div v-for="(result, index) in results" :key="index">
+          <span v-if="result.startsWith('Error:')" class="console-error" v-html="ansiConverter.toHtml(result)"></span>
+          <span v-else class="console-log" v-html="ansiConverter.toHtml(result || 'An error occurred')"></span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +37,7 @@
 import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 import AnsiToHtml from 'ansi-to-html'
+
 
 export default {
   name: 'DatexPlayground',
@@ -45,21 +54,18 @@ export default {
     }
   },
   setup(props) {
+
+    const DatexPromise = import("https://unyt.land/@unyt/datex/0.0.6/src/mod.ts");
+
     const code = ref(props.code)
     const isRunning = ref(false)
     const consoleRef = ref(null)
-    const hasExecuted = ref(false)
     const editorRef = shallowRef(null)
     const currentTheme = ref('light')
     const language = ref('javascript')
     const editorHeight = ref(60)
-    const ansiConverter = new AnsiToHtml()
-    const originalConsole = {
-      log: console.log,
-      error: console.error,
-      warn: console.warn,
-      info: console.info
-    }
+    const ansiConverter = new AnsiToHtml();
+    const results = ref([]);
     
     const editorOptions = {
       automaticLayout: true,
@@ -167,73 +173,21 @@ export default {
     }
 
     const executeCode = async () => {
-      hasExecuted.value = true
-      isRunning.value = true
-      clearConsole()
 
-      console.log = consoleInterceptor('log')
-      console.error = consoleInterceptor('error')
-      console.warn = consoleInterceptor('warn')
-      console.info = consoleInterceptor('info')
+      console.log('starting DATEX...')
+      const { Datex } = await DatexPromise;
+      console.log('DATEX runtime initialized', Datex)
+
+      isRunning.value = true
 
       try {
-        if (!window.Datex) {
-          throw new Error("DATEX not loaded")
-        }
-
         const result = await Datex.execute(code.value, true)
-        if (result !== undefined) console.log(result)
-
+        results.value.push(result)
       } catch (error) {
         console.error('Error:', error)
+        results.value.push(`Error: ${error.message}`)
       } finally {
-        console.log = originalConsole.log
-        console.error = originalConsole.error
-        console.warn = originalConsole.warn
-        console.info = originalConsole.info
         isRunning.value = false
-      }
-    }
-
-    const consoleInterceptor = (type) => {
-    return (...args) => {
-      originalConsole[type](...args)
-
-        const filteredMessages = [
-          'Logger initialized!',
-          'Runtime initialized - Version',
-          'Ignoring Event: localhost'
-        ]
-
-      const joinedArgs = args.join(' ')
-        if (filteredMessages.some(msg => joinedArgs.includes(msg))) {
-          return
-        }
-
-      const formattedArgs = args.map(arg => {
-        if (typeof arg === 'object') {
-          try {
-            return JSON.stringify(arg, null, 2)
-          } catch {
-            return String(arg)
-          }
-        }
-        return String(arg)
-      }).join(' ')
-
-      if (consoleRef.value) {
-        const message = document.createElement('div')
-        message.className = `console-message console-${type}`
-        message.innerHTML = ansiConverter.toHtml(formattedArgs)
-        consoleRef.value.appendChild(message)
-        consoleRef.value.scrollTop = consoleRef.value.scrollHeight
-      }
-    }
-  }
-
-    const clearConsole = () => {
-      if (consoleRef.value) {
-        consoleRef.value.innerHTML = ''
       }
     }
 
@@ -263,12 +217,6 @@ export default {
       }
     })
 
-    onBeforeUnmount(() => {
-      console.log = originalConsole.log
-      console.error = originalConsole.error
-      console.warn = originalConsole.warn
-      console.info = originalConsole.info
-    })
 
     return {
       code,
@@ -277,10 +225,11 @@ export default {
       currentTheme,
       language,
       editorOptions,
-      hasExecuted,
       editorHeight,
       executeCode,
       handleEditorMount,
+      results,
+      ansiConverter,
     }
   }
 }
@@ -340,6 +289,9 @@ export default {
 }
 
 .console-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 8px 16px;
   font-weight: 600;
   background: var(--vp-c-bg-soft);
