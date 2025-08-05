@@ -55,7 +55,7 @@ export default {
   },
   setup(props) {
 
-    const DatexPromise = import("https://unyt.land/@unyt/datex/0.0.6/src/mod.ts");
+    const DatexPromise = (typeof window !== 'undefined') && import("https://unyt.land/@unyt/datex/0.0.6/src/mod.ts");
 
     const code = ref(props.code)
     const isRunning = ref(false)
