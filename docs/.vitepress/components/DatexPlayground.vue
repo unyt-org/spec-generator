@@ -4,7 +4,6 @@
       <div class="editor-container" :style="{ height: editorHeight + 'px' }">
         <VueMonacoEditor
           v-model:value="code"
-          :language="language"
           :theme="currentTheme === 'dark' ? 'customDark' : 'customLight'"
           :options="editorOptions"
           @mount="handleEditorMount"
@@ -16,6 +15,9 @@
       <button @click="executeCode" :disabled="isRunning" class="run-button">
         {{ isRunning ? 'Running...' : 'Run DATEX Code' }}
       </button>
+      <div v-if="endpoint" class="endpoint">
+        {{ endpoint }}
+      </div>
     </div>
     
     <div class="console-output" v-if="results.length">
@@ -55,24 +57,29 @@ export default {
   },
   setup(props) {
 
-    const DatexPromise = (typeof window !== 'undefined') && import("https://unyt.land/@unyt/datex/0.0.6/src/mod.ts");
+    const DatexPromise = (typeof window !== 'undefined') && 
+      import("https://unyt.land/@unyt/datex/0.0.6/src/mod.ts").then(mod => {
+        endpoint.value = mod.Datex.endpoint;
+        return mod;
+      });
 
     const code = ref(props.code)
     const isRunning = ref(false)
     const consoleRef = ref(null)
     const editorRef = shallowRef(null)
     const currentTheme = ref('light')
-    const language = ref('javascript')
     const editorHeight = ref(60)
     const ansiConverter = new AnsiToHtml();
     const results = ref([]);
+    const endpoint = ref(null);
     
     const editorOptions = {
       automaticLayout: true,
       minimap: { enabled: false },
       scrollBeyondLastLine: false,
-      fontSize: 14,
-      lineNumbersMinChars: 3,
+      fontSize: 15,
+      // language
+      lineNumbersMinChars: 2,
       wordWrap: 'on',
       lineNumbers: 'on',
       scrollbar: {
@@ -80,6 +87,7 @@ export default {
         horizontal: 'hidden',
         handleMouseWheel: false
       },
+      renderLineHighlight: 'none',
       overviewRulerLanes: 0,
       hideCursorInOverviewRuler: true,
       overviewRulerBorder: false
@@ -174,14 +182,15 @@ export default {
 
     const executeCode = async () => {
 
-      console.log('starting DATEX...')
       const { Datex } = await DatexPromise;
-      console.log('DATEX runtime initialized', Datex)
+      console.log('DATEX runtime', Datex)
 
       isRunning.value = true
 
       try {
+        console.log('Executing code:', code.value)
         const result = await Datex.execute(code.value, true)
+        console.log('Execution result:', result)
         results.value.push(result)
       } catch (error) {
         console.error('Error:', error)
@@ -223,13 +232,13 @@ export default {
       isRunning,
       console: consoleRef,
       currentTheme,
-      language,
       editorOptions,
       editorHeight,
       executeCode,
       handleEditorMount,
       results,
       ansiConverter,
+      endpoint
     }
   }
 }
@@ -250,19 +259,25 @@ export default {
   min-height: 39px;
   max-height: 400px;
   overflow: hidden;
-  transition: height 0.2s ease-out;
+  /* transition: height 0.2s ease-out; */
+  padding-top: 8px;
 }
 
 .controls {
   padding: 10px;
   border-top: 1px solid var(--vp-c-divider);
   flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
 }
 
 .run-button {
-  background: var(--vp-c-brand);
-  color: white;
-  padding: 8px 16px;
+  background: #eee;
+  color: #111;
+  font-weight: 500;
+  padding: 8px 15px;
   border-radius: 4px;
   border: none;
   cursor: pointer;
@@ -281,22 +296,22 @@ export default {
 .console-output {
   border-top: 1px solid var(--vp-c-divider);
   padding: 0;
-  overflow-y: auto;
   resize: vertical;
-  min-height: 100px;
   max-height: 400px;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .console-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
+  padding: 8px 15px;
   font-weight: 600;
   background: var(--vp-c-bg-soft);
   border-bottom: 1px solid var(--vp-c-divider);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .console-content {
@@ -304,7 +319,7 @@ export default {
   padding: 10px;
   overflow-y: auto;
   font-family: monospace;
-  font-size: 13px;
+  font-size: 15px;
   white-space: pre-wrap;
   word-break: break-word;
   margin: 0;
