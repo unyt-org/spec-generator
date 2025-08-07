@@ -12,12 +12,13 @@
     </client-only>
 
     <div class="controls">
+      <div class="runtime-info">
+        <div v-if="endpoint">Endpoint: <b style="user-select: all;">{{ endpoint }}</b></div>
+        <div v-if="version">Version: <b style="user-select: all;">{{ version.datex }} (datex-core-js: {{ version.js }})</b></div>
+      </div>
       <button @click="executeCode" :disabled="isRunning" class="run-button">
         {{ isRunning ? 'Running...' : 'Run DATEX Code' }}
       </button>
-      <div v-if="endpoint" class="endpoint">
-        {{ endpoint }}
-      </div>
     </div>
     
     <div class="console-output" v-if="results.length">
@@ -58,8 +59,13 @@ export default {
   setup(props) {
 
     const DatexPromise = (typeof window !== 'undefined') && 
-      import("https://unyt.land/@unyt/datex/0.0.6/src/mod.ts").then(mod => {
+      import("https://unyt-org.github.io/datex-core-js/datex.js").then(mod => {
         endpoint.value = mod.Datex.endpoint;
+        version.value = {
+          datex: mod.Datex.version,
+          js: mod.Datex.js_version,
+        };
+        globalThis.Datex = mod.Datex;
         return mod;
       });
 
@@ -72,6 +78,7 @@ export default {
     const ansiConverter = new AnsiToHtml();
     const results = ref([]);
     const endpoint = ref(null);
+    const version = ref(null);
     
     const editorOptions = {
       automaticLayout: true,
@@ -238,7 +245,8 @@ export default {
       handleEditorMount,
       results,
       ansiConverter,
-      endpoint
+      endpoint,
+      version,
     }
   }
 }
@@ -293,6 +301,11 @@ export default {
   cursor: not-allowed;
 }
 
+.runtime-info {
+  opacity: 0.8;
+  line-height: 1.3;
+}
+
 .console-output {
   border-top: 1px solid var(--vp-c-divider);
   padding: 0;
@@ -330,6 +343,7 @@ export default {
   margin: 2px 0;
   padding: 1px 0;
 }
+
 
 .console-error { 
   color: #ff4d4f;
