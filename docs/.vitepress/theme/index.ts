@@ -7,6 +7,8 @@ import './style.css'
 import TypeScriptPlayground from '../components/TypeScriptPlayground.vue'
 import DatexPlayground from '../components/DatexPlayground.vue'
 import DXBProtocolViewer from '../components/DXBProtocolViewer.vue'
+import DXBBlock from '../components/DXBBlock.vue'
+import DXBBlockSubsection from '../components/DXBBlockSubsection.vue'
 import DatexSnippet from '../components/DatexSnippet.vue'
 import 'viewerjs/dist/viewer.min.css'
 import imageViewer from 'vitepress-plugin-image-viewer'
@@ -62,6 +64,8 @@ export default {
     app.component('DatexPlayground', DatexPlayground)
     app.component('DatexSnippet', DatexSnippet)
     app.component('DXBProtocolViewer', DXBProtocolViewer)
+    app.component('DXBBlock', DXBBlock)
+    app.component('DXBBlockSubsection', DXBBlockSubsection)
   },
   setup() {
     const route = useRoute()

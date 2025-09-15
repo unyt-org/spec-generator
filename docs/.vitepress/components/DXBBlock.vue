@@ -20,5 +20,4 @@ import { routingHeader, blockHeader, encryptedHeader, body } from "./block-types
 	gap: 16px;
 	padding: 16px;
 }
-
 </style>
