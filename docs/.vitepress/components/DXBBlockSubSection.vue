@@ -17,10 +17,13 @@
                         ['grouped-' + part.group]: true,
                     }"
                     @mouseenter="focusGroup(part.group)" @mouseleave="focusGroup(null)">
-                    <div class="part-inner" :style="{
+                    <div class="part-inner optional-bg" :style="{
                         backgroundColor: part.category,
                     }">
-                        <div :style="{ 
+                        <div v-if="part.optional" class="optional-bg-overlay"></div>
+                        <div :style="{
+                            zIndex: 1,
+                            position: 'relative',
                             visibility: (part.first || !part.bytes) ? 'visible' : 'hidden', 
                             whiteSpace: 'nowrap',
                             ...!part.first && { 
@@ -134,6 +137,7 @@ function createBytePart(
         parts.push({
             name: definition.name,
             group: definition.group ?? definition.name,
+            optional: definition.optional ?? false,
             category: Category[definition.category],
             byteSize: definition.byteSize,
             bytes: bytesInRow,
@@ -210,6 +214,8 @@ onUnmounted(() => {
     padding: 0.5rem;
     border-radius: 0.25rem;
     height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 .part {
     padding: 0.25rem;
@@ -219,11 +225,11 @@ onUnmounted(() => {
     background-color: var(--vp-c-divider)!important;
 }
 
-.part.right-opened {
+.right-opened .part-inner {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
-.part.left-opened {
+.left-opened .part-inner {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
@@ -241,6 +247,23 @@ summary {
 
 .metadata {
     font-size: 0.95rem;
+}
+
+.optional-bg-overlay {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Background with diagonal stripes */
+    background: repeating-linear-gradient(
+        45deg,           /* angle of the stripes */
+        #ffffff00,         /* stripe color */
+        #ffffff00 10px,    /* stripe width */
+        #ffffff15 10px,    /* gap color */
+        #ffffff15 20px     /* gap width */
+    );
 }
 
 
