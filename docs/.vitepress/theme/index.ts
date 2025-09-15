@@ -4,8 +4,6 @@ import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import 'virtual:group-icons.css' 
 import './style.css'
-// tailwind css
-import './index.css';
 import TypeScriptPlayground from '../components/TypeScriptPlayground.vue'
 import DatexPlayground from '../components/DatexPlayground.vue'
 import DXBProtocolViewer from '../components/DXBProtocolViewer.vue'
