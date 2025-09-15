@@ -7,7 +7,7 @@ const { Layout } = DefaultTheme
 <template>
   <Layout>
     <template #doc-before>
-      <div class="warning custom-block" style="margin-bottom: 40px;">
+      <div class="warning custom-block" style="margin-bottom: 40px; background-color: var(--vp-custom-block-note-code-bg);">
 		<p>
 		  <strong>Important Notice:</strong>
 		</p>
