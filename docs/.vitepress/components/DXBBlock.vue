@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DXBBlockSubSection from "./DXBBlockSubsection.vue";
+import DXBBlockSubSection from "./DXBBlockSubSection.vue";
 import { routingHeader, blockHeader, encryptedHeader, body } from "./block-types.ts";
 </script>
 
