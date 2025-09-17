@@ -5,7 +5,7 @@
         </summary>
         <div ref="gridRef" :style="{ display: 'grid', gridTemplateColumns: `repeat(${COL_WIDTH}, minmax(0, 1fr))` }">
             <template
-                v-for="(part, i) in createByteParts(byteDefinitions, data ? data.map(d => ({ field: d.field, bytes: d.bytes })) : [])"
+                v-for="(part, i) in createByteParts(byteDefinitions, data ? data.map(d => ({ name: d.name, bytes: d.bytes })) : [])"
                 :key="i">
                 <div class="part" :style="{
                         gridColumn: `${part.normalizedColOffset + 1} / span ${part.normalizedByteLength}`,
@@ -26,12 +26,13 @@
                             position: 'relative',
                             visibility: (part.first || !part.bytes) ? 'visible' : 'hidden', 
                             whiteSpace: 'nowrap',
-                            ...!part.first && { 
+                            ...!part.first && !part.bytes && { 
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 height: '100%'
-                            }
+                            },
+                            ...!part.first && part.bytes && { display: 'none' }
                             }">
                             <b style="font-weight: bolder;">{{ part.first ? part.name : '...' }}</b>
                             <div class="metadata" v-if="part.first">
@@ -55,10 +56,10 @@ import { Category, type BlockData, type ByteSection } from "./block-types.ts";
 defineProps<{
     title: string;
     byteDefinitions: ByteSection[];
-    data?: { field: string; bytes: number[] }[];
+    data?: BlockData[number]["parts"]
 }>();
 
-const COL_WIDTH = 1000;
+const COL_WIDTH = 200;
 const bytesPerRow = ref(42);
 const gridRef = ref<HTMLElement | null>(null);
 
@@ -75,8 +76,15 @@ function createByteParts(
     let byteOffset = 0;
     let lastColOffset = 0;
     let lastRow = 0;
-    return byteDefinitions.map(def => {
-        const partData = data?.find(d => d.field === def.name);
+
+    // remove all byte sections that have no data in data
+    const byteDefinitionsNormalized = !data.length ? byteDefinitions : byteDefinitions.filter(def => {
+        const partData = data?.find(d => d.name === def.name);
+        return partData || !def.if;
+    });
+
+    return byteDefinitionsNormalized.map(def => {
+        const partData = data?.find(d => d.name === def.name);
         const {parts, byteOffset: byteOffsetNew, lastColOffset: lastColOffsetNew, lastRow: lastRowNew} = createBytePart(
             byteOffset, 
             def, 
@@ -108,7 +116,7 @@ function createBytePart(
 
     const parts: any[] = [];
     let bytesRemaining = definition.byteSize;
-    const minByteWidth = 5;
+    const minByteWidth = 6;
 
     while (bytesRemaining > 0) {
         const colOffset = byteOffset % bytesPerRow;
@@ -137,7 +145,7 @@ function createBytePart(
         parts.push({
             name: definition.name,
             group: definition.group ?? definition.name,
-            optional: definition.optional ?? false,
+            optional: definition.if ?? false,
             category: Category[definition.category],
             byteSize: definition.byteSize,
             bytes: bytesInRow,
@@ -169,7 +177,7 @@ const render = () => {
     if (!gridRef.value) return;
     const gridWidth = gridRef.value.getBoundingClientRect().width;
     if (gridWidth) {
-        bytesPerRow.value = nearestDivisor(Math.floor(gridWidth / 30));
+        bytesPerRow.value = nearestDivisor(Math.floor(gridWidth / 24));
     }
 };
 
