@@ -8,8 +8,6 @@ const props = defineProps<{
 const speckPath = props.speck.startsWith(".") ? props.speck.slice(1) : props.speck;
 const spec = data[speckPath];
 
-console.warn(">", data, props.speck, spec);
-
 const customData = {
   'Routing Header': {
     'Magic Number': [0x01, 0x64],
@@ -26,10 +24,6 @@ const routingHeader = block.find(b => b.name === "Routing Header")!;
 const blockHeader = block.find(b => b.name === "Block Header")!;
 const encryptedHeader = block.find(b => b.name === "Encrypted Header")!;
 const body = block.find(b => b.name === "Body")!;
-
-console.log(spec);
-console.log(block);
-
 </script>
 
 <template>
