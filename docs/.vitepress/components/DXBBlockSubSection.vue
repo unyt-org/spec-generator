@@ -65,7 +65,7 @@ const gridRef = ref<HTMLElement | null>(null);
 
 
 function bytesToHexString(bytes: Uint8Array) {
-    return bytes.values().map((b) => b.toString(16).padStart(2, "0")).toArray().join(" ").toUpperCase();
+    return [...bytes].map((b) => b.toString(16).padStart(2, "0")).join(" ").toUpperCase();
 }
 
 function createByteParts(
