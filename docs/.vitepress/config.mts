@@ -4,6 +4,7 @@ import { withPwa } from '@vite-pwa/vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 import timeline from "vitepress-markdown-timeline";
 import AutoSidebar from 'vite-plugin-vitepress-auto-sidebar'
+import path from 'path/win32';
 
 const vitePressOptions = defineConfig({
   base: '/',
@@ -54,6 +55,11 @@ const vitePressOptions = defineConfig({
   },
   vite: {
     publicDir: '../public',
+      resolve: {
+        alias: [
+            { find: '@', replacement: path.resolve(__dirname, 'src') },
+        ],
+    },
     plugins: [
       groupIconVitePlugin(),
       AutoSidebar({

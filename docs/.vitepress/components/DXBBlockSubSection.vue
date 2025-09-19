@@ -5,7 +5,7 @@
         </summary>
         <div ref="gridRef" :style="{ display: 'grid', gridTemplateColumns: `repeat(${COL_WIDTH}, minmax(0, 1fr))` }">
             <template
-                v-for="(part, i) in createByteParts(byteDefinitions, data ? data.map(d => ({ name: d.name, bytes: d.bytes })) : [])"
+                v-for="(part, i) in createByteParts(sectionDefinition, data)"
                 :key="i">
                 <div class="part" :style="{
                         gridColumn: `${part.normalizedColOffset + 1} / span ${part.normalizedByteLength}`,
@@ -14,7 +14,7 @@
                     :class="{
                         'right-opened': part.rightOpened,
                         'left-opened': part.leftOpened,
-                        ['grouped-' + part.group]: true,
+                        ['grouped-' + normalizeName(part.group)]: true,
                     }"
                     @mouseenter="focusGroup(part.group)" @mouseleave="focusGroup(null)">
                     <div class="part-inner optional-bg" :style="{
@@ -50,13 +50,13 @@
 </template>
 
 <script setup lang="ts">
+import { Category, FieldDefinition, ParsedField, ParsedSection, ParsedStructure, SectionDefinition } from "@unyt/speck";
 import { ref, defineProps, onMounted, onUnmounted, nextTick, h } from "vue";
-import { Category, type BlockData, type ByteSection } from "./block-types.ts";
 
 defineProps<{
     title: string;
-    byteDefinitions: ByteSection[];
-    data?: BlockData[number]["parts"]
+    sectionDefinition: SectionDefinition,
+    data?: ParsedSection,
 }>();
 
 const COL_WIDTH = 200;
@@ -64,31 +64,30 @@ const bytesPerRow = ref(42);
 const gridRef = ref<HTMLElement | null>(null);
 
 
-
-function bytesToHexString(bytes: number[]) {
-    return bytes.map((b) => b.toString(16).padStart(2, "0")).join(" ").toUpperCase();
+function bytesToHexString(bytes: Uint8Array) {
+    return bytes.values().map((b) => b.toString(16).padStart(2, "0")).toArray().join(" ").toUpperCase();
 }
 
 function createByteParts(
-    byteDefinitions: ByteSection[],
-    data: BlockData[number]["parts"],
+    sectionDefinition: SectionDefinition,
+    data?: ParsedSection,
 ) {
     let byteOffset = 0;
     let lastColOffset = 0;
     let lastRow = 0;
 
     // remove all byte sections that have no data in data
-    const byteDefinitionsNormalized = !data.length ? byteDefinitions : byteDefinitions.filter(def => {
-        const partData = data?.find(d => d.name === def.name);
-        return partData || !def.if;
+    const fieldDefinitions = !data ? sectionDefinition.fields : sectionDefinition.fields.filter(def => {
+        const partData = data?.fields.find(d => d.name === def.name);
+        return partData;
     });
 
-    return byteDefinitionsNormalized.map(def => {
-        const partData = data?.find(d => d.name === def.name);
-        const {parts, byteOffset: byteOffsetNew, lastColOffset: lastColOffsetNew, lastRow: lastRowNew} = createBytePart(
+    return fieldDefinitions.map(definition => {
+        const partData = data?.fields?.find(d => d.name === definition.name);
+        const {parts, byteOffset: byteOffsetNew, lastColOffset: lastColOffsetNew, lastRow: lastRowNew} = createField(
             byteOffset, 
-            def, 
-            partData?.bytes, 
+            definition, 
+            partData, 
             bytesPerRow.value, 
             lastColOffset, 
             lastRow
@@ -100,17 +99,17 @@ function createByteParts(
     }).flat()
 }
 
-function createBytePart(
+function createField(
     byteOffset: number,
-    definition: ByteSection,
-    bytes: number[] | null = null,
+    definition: FieldDefinition,
+    parsedField: ParsedField | null = null,
     bytesPerRow: number,
     lastColOffset: number,
     lastRow: number
 ) {
-    if (bytes && bytes.length !== definition.byteSize) {
+    if (parsedField && parsedField.bytes.length !== definition.byteSize) {
         throw new Error(
-            `Byte length mismatch for ${definition.name}: expected ${definition.byteSize}, got ${bytes.length}`
+            `Byte length mismatch for ${definition.name}: expected ${definition.byteSize}, got ${parsedField.bytes.length}`
         );
     }
 
@@ -128,7 +127,7 @@ function createBytePart(
         const remainingInRow = bytesPerRow - colOffset;
         const actualBytesInRow = Math.min(remainingInRow, bytesRemaining ?? 0);
         let byteLengthInRow = Math.max(minByteWidth, actualBytesInRow);
-        const bytesInRow = bytes?.slice(0, actualBytesInRow);
+        const bytesInRow = parsedField?.bytes?.slice(0, actualBytesInRow);
 
         const newRemainingInRow = bytesPerRow - (colOffset + byteLengthInRow);
         if (newRemainingInRow < minByteWidth && newRemainingInRow > 0) {
@@ -187,7 +186,7 @@ function focusGroup(group: string | null) {
     if (!elements) return;
     for (let i = 0; i < elements.length; i++) {
         const el = elements[i];
-        if (group && el.classList.contains("grouped-" + group)) {
+        if (group && el.classList.contains("grouped-" + normalizeName(group))) {
             el.classList.remove("blurred");
         } else if (group) {
             el.classList.add("blurred");
@@ -195,6 +194,10 @@ function focusGroup(group: string | null) {
             el.classList.remove("blurred");
         }
     }
+}
+
+function normalizeName(name: string) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
 onMounted(() => {
