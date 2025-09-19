@@ -1,5 +1,7 @@
 <template>
-	<DXBBlock></DXBBlock>
+	<Suspense>
+		<DXBBlock :speck="speck"></DXBBlock>
+	</Suspense>
 </template>
 
 <script setup lang="ts">

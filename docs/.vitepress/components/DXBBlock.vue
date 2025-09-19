@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { generateStructure, SectionDefinition } from "@unyt/speck";
 import DXBBlockSubSection from "./DXBBlockSubSection.vue";
-import spec from "./dxb.json";
+import { data } from "../json.data.ts";
+const props = defineProps<{
+  speck: string,
+}>();
+const speckPath = props.speck.startsWith(".") ? props.speck.slice(1) : props.speck;
+const spec = data[speckPath];
+
+console.warn(">", data, props.speck, spec);
 
 const customData = {
   'Routing Header': {
