@@ -7,6 +7,7 @@ const props = defineProps<{
 }>();
 const speckPath = props.speck.startsWith(".") ? props.speck.slice(1) : props.speck;
 const spec = data[speckPath];
+console.log(spec)
 
 const customData = {
   'Routing Header': {

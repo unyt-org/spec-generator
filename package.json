@@ -14,7 +14,7 @@
   "type": "module",
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.5.5",
-    "@unyt/speck": "^0.0.1",
+    "@unyt/speck": "^0.0.6",
     "ansi-to-html": "^0.7.2",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-mathjax3": "^4.3.2",

@@ -79,6 +79,8 @@
   --vp-c-bg: var(--unyt-bg-primary);
 
   --vp-c-gutter: var(--vp-c-divider);
+
+  --vp-code-color: var(--unyt-text-primary);
 }
 
 /**
