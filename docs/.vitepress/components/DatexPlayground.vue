@@ -15,6 +15,7 @@
       <div class="runtime-info">
         <div v-if="endpoint">Endpoint: <b style="user-select: all;">{{ endpoint }}</b></div>
         <div v-if="version">Version: <b style="user-select: all;">{{ version.datex }} (datex-core-js: {{ version.js }})</b></div>
+        <div v-if="version?.commit">Commit: <b style="user-select: all;"><a target="_blank" :href="`https://github.com/unyt-org/datex-core-js/commit/${version.commit}`">{{ version.commit }}</a></b></div>
       </div>
       <button @click="executeCode" :disabled="isRunning" class="run-button">
         {{ isRunning ? 'Running...' : 'Run DATEX Code' }}
@@ -59,11 +60,22 @@ export default {
   setup(props) {
 
     const DatexPromise = (typeof window !== 'undefined') && 
-      import("https://unyt-org.github.io/datex-core-js/datex.js").then(mod => {
+      import("https://unyt-org.github.io/datex-core-js/datex.js").then(async mod => {
+
+        // get commit hash
+        const commitHash = await fetch('https://unyt-org.github.io/datex-core-js/commit-hash.txt')
+          .then(res => res.text())
+          .then(text => text.trim())
+          .catch(() => 'unknown');
+        if (commitHash) {
+          console.log('Using DATEX beta with commit hash:', commitHash);
+        }
+
         endpoint.value = mod.Datex.endpoint;
         version.value = {
           datex: mod.Datex.version,
           js: mod.Datex.js_version,
+          commit: commitHash
         };
         globalThis.Datex = mod.Datex;
         return mod;
@@ -196,7 +208,7 @@ export default {
 
       try {
         console.log('Executing code:', code.value)
-        const result = await Datex.execute(code.value, true)
+        const result = await Datex.executeWithStringResult(code.value, [], {formatted: true, colorized: true})
         console.log('Execution result:', result)
         results.value.push(result)
       } catch (error) {
