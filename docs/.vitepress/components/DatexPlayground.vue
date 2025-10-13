@@ -64,9 +64,9 @@ export default {
 
         // get commit hash
         const commitHash = await fetch('https://unyt-org.github.io/datex-core-js/commit-hash.txt')
-          .then(res => res.text())
-          .then(text => text.trim())
-          .catch(() => 'unknown');
+          .then(res => res.ok() && res.text())
+          .then(text => text?.trim())
+          .catch(() => null);
         if (commitHash) {
           console.log('Using DATEX beta with commit hash:', commitHash);
         }
