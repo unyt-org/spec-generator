@@ -90,105 +90,105 @@ const vitePressOptions = defineConfig({
     ]
   },
   lastUpdated: true,
-  pwa: {
-    outDir: '../.vitepress/dist',
-    registerType: 'autoUpdate',
-    manifest: {
-      name: 'DATEX Spec',
-      short_name: 'DATEX',
-      description: 'DATEX Spec: Unified data specification for next-gen systems',
-      theme_color: '#ffffff',
-      background_color: '#ffffff',
-      display: 'standalone',
-      start_url: '/',
-      icons: [
-        {
-          src: 'pwa-192x192.png',
-          sizes: '192x192',
-          type: 'image/png'
-        },
-        {
-          src: 'pwa-512x512.png',
-          sizes: '512x512',
-          type: 'image/png'
-        }
-      ]
-    },
-        workbox: {
-      globPatterns: [
-        '**/*.{js,css,html,ico,png,jpg,jpeg,gif,webp,svg,woff,woff2,ttf,eot}',
-        'assets/**/*'
-      ],
-      runtimeCaching: [
-        {
-          urlPattern: ({ request }) => request.destination === 'document',
-          handler: 'NetworkFirst',
-          options: {
-            cacheName: 'pages-cache',
-            expiration: {
-              maxEntries: 100,
-              maxAgeSeconds: 60 * 60 * 24 * 7
-            },
-            networkTimeoutSeconds: 3,
-            cacheableResponse: {
-              statuses: [0, 200]
-            }
-          }
-        },
-        {
-          urlPattern: ({ request, url }) => {
-            return request.destination === 'image' || 
-                   /\.(png|jpg|jpeg|gif|webp|svg|ico)(\?.*)?$/i.test(url.pathname)
-          },
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'images-cache',
-            expiration: {
-              maxEntries: 200,
-              maxAgeSeconds: 60 * 60 * 24 * 30
-            },
-            cacheableResponse: {
-              statuses: [0, 200]
-            }
-          }
-        },
-        {
-          urlPattern: ({ url }) => {
-            return url.pathname.startsWith('/') && 
-                   /\.(png|jpg|jpeg|gif|webp|svg|ico|css|js|woff|woff2|ttf|eot)(\?.*)?$/i.test(url.pathname)
-          },
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'static-assets',
-            expiration: {
-              maxEntries: 200,
-              maxAgeSeconds: 60 * 60 * 24 * 30
-            },
-            cacheableResponse: {
-              statuses: [0, 200]
-            }
-          }
-        },
-        {
-          urlPattern: ({ request }) => request.destination === 'script' || request.destination === 'style',
-          handler: 'StaleWhileRevalidate',
-          options: {
-            cacheName: 'js-css-cache',
-            cacheableResponse: {
-              statuses: [0, 200]
-            }
-          }
-        }
-      ],
-      skipWaiting: true,
-      clientsClaim: true,
-      cleanupOutdatedCaches: true
-    },
-    devOptions: {
-      enabled: false,
-      type: 'module'
-    }
-  },
+  // pwa: {
+  //   outDir: '../.vitepress/dist',
+  //   registerType: 'autoUpdate',
+  //   manifest: {
+  //     name: 'DATEX Spec',
+  //     short_name: 'DATEX',
+  //     description: 'DATEX Spec: Unified data specification for next-gen systems',
+  //     theme_color: '#ffffff',
+  //     background_color: '#ffffff',
+  //     display: 'standalone',
+  //     start_url: '/',
+  //     icons: [
+  //       {
+  //         src: 'pwa-192x192.png',
+  //         sizes: '192x192',
+  //         type: 'image/png'
+  //       },
+  //       {
+  //         src: 'pwa-512x512.png',
+  //         sizes: '512x512',
+  //         type: 'image/png'
+  //       }
+  //     ]
+  //   },
+  //       workbox: {
+  //     globPatterns: [
+  //       '**/*.{js,css,html,ico,png,jpg,jpeg,gif,webp,svg,woff,woff2,ttf,eot}',
+  //       'assets/**/*'
+  //     ],
+  //     runtimeCaching: [
+  //       {
+  //         urlPattern: ({ request }) => request.destination === 'document',
+  //         handler: 'NetworkFirst',
+  //         options: {
+  //           cacheName: 'pages-cache',
+  //           expiration: {
+  //             maxEntries: 100,
+  //             maxAgeSeconds: 60 * 60 * 24 * 7
+  //           },
+  //           networkTimeoutSeconds: 3,
+  //           cacheableResponse: {
+  //             statuses: [0, 200]
+  //           }
+  //         }
+  //       },
+  //       {
+  //         urlPattern: ({ request, url }) => {
+  //           return request.destination === 'image' || 
+  //                  /\.(png|jpg|jpeg|gif|webp|svg|ico)(\?.*)?$/i.test(url.pathname)
+  //         },
+  //         handler: 'CacheFirst',
+  //         options: {
+  //           cacheName: 'images-cache',
+  //           expiration: {
+  //             maxEntries: 200,
+  //             maxAgeSeconds: 60 * 60 * 24 * 30
+  //           },
+  //           cacheableResponse: {
+  //             statuses: [0, 200]
+  //           }
+  //         }
+  //       },
+  //       {
+  //         urlPattern: ({ url }) => {
+  //           return url.pathname.startsWith('/') && 
+  //                  /\.(png|jpg|jpeg|gif|webp|svg|ico|css|js|woff|woff2|ttf|eot)(\?.*)?$/i.test(url.pathname)
+  //         },
+  //         handler: 'CacheFirst',
+  //         options: {
+  //           cacheName: 'static-assets',
+  //           expiration: {
+  //             maxEntries: 200,
+  //             maxAgeSeconds: 60 * 60 * 24 * 30
+  //           },
+  //           cacheableResponse: {
+  //             statuses: [0, 200]
+  //           }
+  //         }
+  //       },
+  //       {
+  //         urlPattern: ({ request }) => request.destination === 'script' || request.destination === 'style',
+  //         handler: 'StaleWhileRevalidate',
+  //         options: {
+  //           cacheName: 'js-css-cache',
+  //           cacheableResponse: {
+  //             statuses: [0, 200]
+  //           }
+  //         }
+  //       }
+  //     ],
+  //     skipWaiting: true,
+  //     clientsClaim: true,
+  //     cleanupOutdatedCaches: true
+  //   },
+  //   devOptions: {
+  //     enabled: false,
+  //     type: 'module'
+  //   }
+  // },
   themeConfig: {
     logo: '/transparent.svg',
     search: {

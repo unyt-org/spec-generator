@@ -19,37 +19,37 @@ import 'vitepress-plugin-codeblocks-fold/style/index.css'
 import "vitepress-markdown-timeline/dist/theme/index.css";
 import Layout from './Layout.vue'
 
-if (typeof window !== 'undefined') {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-          console.log('SW registered:', registration)
+// if (typeof window !== 'undefined') {
+//   if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//       navigator.serviceWorker.register('/sw.js')
+//         .then(registration => {
+//           console.log('SW registered:', registration)
           
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  console.log('New content available, reloading...')
-                  setTimeout(() => {
-                    window.location.reload()
-                  }, 1000)
-                }
-              })
-            }
-          })
-          setInterval(() => {
-            registration.update()
-          }, 60000)
+//           registration.addEventListener('updatefound', () => {
+//             const newWorker = registration.installing
+//             if (newWorker) {
+//               newWorker.addEventListener('statechange', () => {
+//                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+//                   console.log('New content available, reloading...')
+//                   setTimeout(() => {
+//                     window.location.reload()
+//                   }, 1000)
+//                 }
+//               })
+//             }
+//           })
+//           setInterval(() => {
+//             registration.update()
+//           }, 60000)
           
-        })
-        .catch(error => {
-          console.error('SW registration failed:', error)
-        })
-    })
-  }
-}
+//         })
+//         .catch(error => {
+//           console.error('SW registration failed:', error)
+//         })
+//     })
+//   }
+// }
 
 export default {
   extends: DefaultTheme,

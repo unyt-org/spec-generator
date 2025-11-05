@@ -70,15 +70,26 @@ export default {
         if (commitHash) {
           console.log('Using DATEX beta with commit hash:', commitHash);
         }
+        const defaultConfig = {
+          interfaces: [{
+              type: "websocket-client",
+              config: { address: "wss://example.unyt.land" },
+          }],
+          debug: false, // set to true to show info/debug messages
+        };
 
-        endpoint.value = mod.Datex.endpoint;
+        const Datex = await mod.Runtime.create(defaultConfig, {
+            allow_unsigned_blocks: true,
+        });
+
+        endpoint.value = Datex.endpoint;
         version.value = {
-          datex: mod.Datex.version,
-          js: mod.Datex.js_version,
+          datex: Datex.version,
+          js: Datex.js_version,
           commit: commitHash
         };
-        globalThis.Datex = mod.Datex;
-        return mod;
+        globalThis.Datex = Datex;
+        return { Datex };
       });
 
     const code = ref(props.code)
