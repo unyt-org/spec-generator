@@ -3,7 +3,7 @@ import markdownItFootnote from 'markdown-it-footnote'
 import { withPwa } from '@vite-pwa/vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 import timeline from "vitepress-markdown-timeline";
-import path from 'path/win32';
+import path from 'node:path';
 import { generateSidebar } from 'vitepress-sidebar';
 
 const rawSidebar = generateSidebar([
@@ -97,7 +97,6 @@ const vitePressOptions = defineConfig({
       }
     ],
     ['script', { src: 'https://unpkg.com/typescript@latest/lib/typescript.js' }],
-    // ['script', { src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js' }],
     [
       'link',
       {
@@ -123,7 +122,7 @@ const vitePressOptions = defineConfig({
         ],
     },
     build: {
-      target: 'baseline-widely-available',
+      target: 'esnext',
     },
     esbuild: {
       target: 'esnext'

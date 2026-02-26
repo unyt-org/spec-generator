@@ -1,0 +1,28 @@
+{
+  "version": "5",
+  "remote": {
+    "https://unyt-org.github.io/datex-web/datex.js": "dd77dbb527454d7c112a6fdc0814417098507b41e097caa5d0be6df93e5863bd"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@guolao/vue-monaco-editor@^1.5.5",
+        "npm:@types/node@^24.0.8",
+        "npm:@unyt/datex@^0.0.12",
+        "npm:@unyt/speck@^0.0.7",
+        "npm:@vite-pwa/vitepress@1",
+        "npm:ansi-to-html@~0.7.2",
+        "npm:markdown-it-footnote@4",
+        "npm:markdown-it-mathjax3@^4.3.2",
+        "npm:monaco-editor@~0.52.2",
+        "npm:vite-plugin-pwa@^1.0.1",
+        "npm:vitepress-markdown-timeline@^1.2.2",
+        "npm:vitepress-plugin-codeblocks-fold@^1.2.35",
+        "npm:vitepress-plugin-group-icons@^1.6.1",
+        "npm:vitepress-plugin-image-viewer@^1.1.6",
+        "npm:vitepress-sidebar@^1.33.1",
+        "npm:vitepress@^1.6.3"
+      ]
+    }
+  }
+}
