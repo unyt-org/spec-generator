@@ -95,7 +95,7 @@ export default {
       window.location.href = url.toString();
     })
 
-    const runtimePromise = useNightly.value ? loadDatexNightly() : loadDatexStable();
+    const runtimePromise = globalThis.window && (useNightly.value ? loadDatexNightly() : loadDatexStable());
 
     async function loadDatexNightly() {
       console.log("Using nightly release of DATEX")
