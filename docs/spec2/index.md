@@ -9,9 +9,12 @@ hero:
     src: /transparent.svg
     alt: DATEX Logo
   actions:
-    - theme: brand
+    - theme: highlight
       text: Explore the Specification
       link: /readme
+    - theme: brand
+      text: DATEX Playground
+      link: /datex-playground
 features:
   - title: Open Standard
     details: An open, community-driven specification with a focus on web technologies and cross-platform support.
