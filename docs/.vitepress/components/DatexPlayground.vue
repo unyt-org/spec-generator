@@ -118,10 +118,10 @@ export default {
 
     async function initRuntime(runtimeClass, commitHash) {
       const defaultConfig = {
-        // interfaces: [{
-        //     type: "websocket-client",
-        //     config: { url: "wss://example.unyt.land" },
-        // }],
+        interfaces: [{
+            type: "websocket-client",
+            config: { url: "wss://example.unyt.land" },
+        }],
       };
 
       const runtime = await runtimeClass.create(defaultConfig, {
