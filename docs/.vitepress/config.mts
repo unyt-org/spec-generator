@@ -3,8 +3,71 @@ import markdownItFootnote from 'markdown-it-footnote'
 import { withPwa } from '@vite-pwa/vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 import timeline from "vitepress-markdown-timeline";
-import AutoSidebar from 'vite-plugin-vitepress-auto-sidebar'
 import path from 'path/win32';
+import { generateSidebar } from 'vitepress-sidebar';
+
+const rawSidebar = generateSidebar([
+  {
+    documentRootPath: 'docs/spec',
+    useTitleFromFileHeading: true,
+    hyphenToSpace: true,
+    underscoreToSpace: true,
+    excludeByGlobPattern: ['toc.md', 'overview.md', 'contributor.md','index.md','contributing.md'],
+  },
+]);
+
+function postProcess(sidebar) {
+  const result = {};
+
+  for (const key in sidebar) {
+    const section = sidebar[key];
+
+    result[key] = {
+      ...section,
+      items: processItems(section.items)
+    };
+  }
+
+  return result;
+}
+
+function processItems(items) {
+  const mappedItems = items.map(item => {
+    // If it has children (nested groups), recurse
+    if (item.items) {
+      return {
+        ...item,
+        items: processItems(item.items)
+      };
+    }
+
+    if (item.link && item.text) {
+      item.link = item.link
+        .replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/')
+        .replace(/_/g, '-')
+        .toLowerCase()
+        .replace(/^\//, '');
+            console.log(item.link)
+
+      item.text = item.text
+        .replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '');
+    }
+    return item;
+  });
+
+  // add readme with text "Introduction" to the beginning of the items array
+  const readmeIndex = mappedItems.findIndex(item => 
+    item.link && item.link.toLowerCase().includes('readme')
+  );
+  
+  if (readmeIndex !== -1) {
+    const readmeItem = mappedItems.splice(readmeIndex, 1)[0];
+    readmeItem.text = 'Introduction';
+    mappedItems.unshift(readmeItem);
+  }
+
+  return mappedItems;
+}
 
 const vitePressOptions = defineConfig({
   base: '/',
@@ -62,31 +125,31 @@ const vitePressOptions = defineConfig({
     },
     plugins: [
       groupIconVitePlugin(),
-      AutoSidebar({
-        sideBarItemsResolved(items) {
-          const processedItems =  items.map(item => {
-            if (item.link && item.text) {
-              item.link = item.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/').replace(/_/g, '-').toLowerCase();
-              item.text = item.text.replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '');
-            }
+      // AutoSidebar({
+      //   sideBarItemsResolved(items) {
+      //     const processedItems =  items.map(item => {
+      //       if (item.link && item.text) {
+      //         item.link = item.link.replace(/\/([0-9]+|[A-Za-z]+[0-9]+)_/, '/').replace(/_/g, '-').toLowerCase();
+      //         item.text = item.text.replace(/^([0-9]+|[A-Za-z]+[0-9]+)_/, '');
+      //       }
 
-            return item;
-          });
-          const readmeIndex = processedItems.findIndex(item => 
-            item.link && item.link.toLowerCase().includes('readme')
-          );
+      //       return item;
+      //     });
+      //     const readmeIndex = processedItems.findIndex(item => 
+      //       item.link && item.link.toLowerCase().includes('readme')
+      //     );
           
-          if (readmeIndex !== -1) {
-            const readmeItem = processedItems.splice(readmeIndex, 1)[0];
-            readmeItem.text = 'Introduction';
-            processedItems.unshift(readmeItem);
-          }
-          return processedItems;
-        },
-        path: "/docs/spec",
-        titleFromFile: true,
-        ignoreList: ['toc.md', 'overview.md', 'contributor.md', 'index.md', 'contributing.md'],
-      })
+      //     if (readmeIndex !== -1) {
+      //       const readmeItem = processedItems.splice(readmeIndex, 1)[0];
+      //       readmeItem.text = 'Introduction';
+      //       processedItems.unshift(readmeItem);
+      //     }
+      //     return processedItems;
+      //   },
+      //   path: "/docs/spec",
+      //   titleFromFile: true,
+      //   ignoreList: ['toc.md', 'overview.md', 'contributor.md', 'index.md', 'contributing.md'],
+      // })
     ]
   },
   lastUpdated: true,
@@ -194,6 +257,7 @@ const vitePressOptions = defineConfig({
     search: {
       provider: 'local'
     },
+    sidebar: postProcess(rawSidebar),
     nav: [
       { text: 'TOC', link: '/toc' },
       { text: 'Team', link: '/contributor' }

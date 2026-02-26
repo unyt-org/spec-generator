@@ -20,10 +20,10 @@
     "markdown-it-mathjax3": "^4.3.2",
     "monaco-editor": "^0.52.2",
     "vite-plugin-pwa": "^1.0.1",
-    "vite-plugin-vitepress-auto-sidebar": "^1.7.1",
     "vitepress-markdown-timeline": "^1.2.2",
     "vitepress-plugin-codeblocks-fold": "^1.2.35",
     "vitepress-plugin-group-icons": "^1.6.1",
-    "vitepress-plugin-image-viewer": "^1.1.6"
+    "vitepress-plugin-image-viewer": "^1.1.6",
+    "vitepress-sidebar": "^1.33.1"
   }
 }
