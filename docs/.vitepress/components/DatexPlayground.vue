@@ -15,11 +15,10 @@
       <div class="runtime-info">
         <div v-if="endpoint">Endpoint: <b style="user-select: all;">{{ endpoint }}</b></div>
         <div v-if="version">Version: <b style="user-select: all;">{{ version.datex }} (datex-core-js: {{ version.js }})</b></div>
-        <div v-if="version?.commit">Commit: <b style="user-select: all;"><a target="_blank" :href="`https://github.com/unyt-org/datex-core-js/commit/${version.commit}`">{{ version.commit }}</a></b></div>
         <div>
           <label class="nightly-toggle">
             <input type="checkbox" v-model="useNightly" />
-            Use nightly release
+            Use nightly release<span v-if="version?.commit"> (<b style="user-select: all;"><a target="_blank" :href="`https://github.com/unyt-org/datex-core-js/commit/${version.commit}`">{{ version.commit }}</a></b>)</span>
           </label>
         </div>
       </div>
@@ -103,9 +102,10 @@ export default {
       const mod = await import('https://unyt-org.github.io/datex-web/datex.js');
       // get commit hash
       const commitHash = await fetch('https://unyt-org.github.io/datex-web/commit-hash.txt')
-        .then(res => res.ok() && res.text())
+        .then(res => res.ok ? res.text() : null)
         .then(text => text?.trim())
         .catch(() => null);
+        console.log(commitHash)
       const runtime = await initRuntime(mod.Runtime, commitHash);
 
       return runtime;
