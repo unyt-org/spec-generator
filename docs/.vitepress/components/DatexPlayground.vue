@@ -16,6 +16,12 @@
         <div v-if="endpoint">Endpoint: <b style="user-select: all;">{{ endpoint }}</b></div>
         <div v-if="version">Version: <b style="user-select: all;">{{ version.datex }} (datex-core-js: {{ version.js }})</b></div>
         <div v-if="version?.commit">Commit: <b style="user-select: all;"><a target="_blank" :href="`https://github.com/unyt-org/datex-core-js/commit/${version.commit}`">{{ version.commit }}</a></b></div>
+        <div>
+          <label class="nightly-toggle">
+            <input type="checkbox" v-model="useNightly" />
+            Use nightly release
+          </label>
+        </div>
       </div>
       <button @click="executeCode" :disabled="isRunning" class="run-button">
         {{ isRunning ? 'Running...' : 'Run DATEX Code' }}
@@ -37,11 +43,11 @@
   </div>
 </template>
 
-<script>
+<script type="ts">
 import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 import AnsiToHtml from 'ansi-to-html'
-
+import { Runtime } from '@unyt/datex';
 
 export default {
   name: 'DatexPlayground',
@@ -58,40 +64,6 @@ export default {
     }
   },
   setup(props) {
-
-    const DatexPromise = (typeof window !== 'undefined') && 
-      import("https://unyt-org.github.io/datex-core-js/datex.js").then(async mod => {
-
-        // get commit hash
-        const commitHash = await fetch('https://unyt-org.github.io/datex-core-js/commit-hash.txt')
-          .then(res => res.ok() && res.text())
-          .then(text => text?.trim())
-          .catch(() => null);
-        if (commitHash) {
-          console.log('Using DATEX beta with commit hash:', commitHash);
-        }
-        const defaultConfig = {
-          interfaces: [{
-              type: "websocket-client",
-              config: { address: "wss://example.unyt.land" },
-          }],
-          debug: false, // set to true to show info/debug messages
-        };
-
-        const Datex = await mod.Runtime.create(defaultConfig, {
-            allow_unsigned_blocks: true,
-        });
-
-        endpoint.value = Datex.endpoint;
-        version.value = {
-          datex: Datex.version,
-          js: Datex.js_version,
-          commit: commitHash
-        };
-        globalThis.Datex = Datex;
-        return { Datex };
-      });
-
     const code = ref(props.code)
     const isRunning = ref(false)
     const consoleRef = ref(null)
@@ -102,6 +74,70 @@ export default {
     const results = ref([]);
     const endpoint = ref(null);
     const version = ref(null);
+
+    const useNightly = ref(false);
+
+    // use nightly if url contains ?nightly
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('nightly')) {
+        useNightly.value = true;
+      }
+    }
+
+    // on toggle useNightly, reload the page to load the correct version
+    watch(useNightly, () => {
+      const url = new URL(window.location.href);
+      if (useNightly.value) {
+        url.searchParams.set('nightly', 'true');
+      } else {
+        url.searchParams.delete('nightly');
+      }
+      window.location.href = url.toString();
+    })
+
+    const runtimePromise = useNightly.value ? loadDatexNightly() : loadDatexStable();
+
+    async function loadDatexNightly() {
+      console.log("Using nightly release of DATEX")
+      const mod = await import('https://unyt-org.github.io/datex-web/datex.js');
+      // get commit hash
+      const commitHash = await fetch('https://unyt-org.github.io/datex-web/commit-hash.txt')
+        .then(res => res.ok() && res.text())
+        .then(text => text?.trim())
+        .catch(() => null);
+      const runtime = await initRuntime(mod.Runtime, commitHash);
+
+      return runtime;
+    }
+
+    async function loadDatexStable() {
+      const runtime = await initRuntime(Runtime, null);
+      return runtime;
+    }
+
+    async function initRuntime(runtimeClass, commitHash) {
+      const defaultConfig = {
+        // interfaces: [{
+        //     type: "websocket-client",
+        //     config: { url: "wss://example.unyt.land" },
+        // }],
+      };
+
+      const runtime = await runtimeClass.create(defaultConfig, {
+          log_level: 'info',
+      });
+
+      endpoint.value = runtime.endpoint;
+      version.value = {
+        datex: runtime.version,
+        js: runtime.js_version,
+        commit: commitHash
+      };
+      globalThis.Datex = runtime;
+      return runtime;
+    }
+
     
     const editorOptions = {
       automaticLayout: true,
@@ -212,7 +248,7 @@ export default {
 
     const executeCode = async () => {
 
-      const { Datex } = await DatexPromise;
+      const Datex = await runtimePromise;
       console.log('DATEX runtime', Datex)
 
       isRunning.value = true
@@ -270,6 +306,7 @@ export default {
       ansiConverter,
       endpoint,
       version,
+      useNightly
     }
   }
 }
@@ -384,5 +421,9 @@ export default {
 
 .console-info {
   color: var(--vp-c-text-2);
+}
+
+.nightly-toggle input {
+  margin-left: 0;
 }
 </style>
