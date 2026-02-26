@@ -82,6 +82,15 @@ export default {
       if (urlParams.has('nightly')) {
         useNightly.value = true;
       }
+      // get base64 encoded code from url param and set it as code
+      if (urlParams.has('code')) {
+        try {
+          const decodedCode = atob(urlParams.get('code'));
+          code.value = decodedCode;
+        } catch (e) {
+          console.warn('Failed to decode code from URL parameter', e);
+        }
+      }
     }
 
     // on toggle useNightly, reload the page to load the correct version
@@ -94,6 +103,22 @@ export default {
       }
       window.location.href = url.toString();
     })
+
+    // update the url with the base64 encoded code on code change, debounce to avoid too many updates
+    let updateUrlTimeout;
+    watch(code, () => {
+      clearTimeout(updateUrlTimeout);
+      updateUrlTimeout = setTimeout(() => {
+        const url = new URL(window.location.href);
+        if (code.value) {
+          url.searchParams.set('code', btoa(code.value));
+        } else {
+          url.searchParams.delete('code');
+        }
+        window.history.replaceState(null, '', url.toString());
+      }, 500);
+    })
+    
 
     const runtimePromise = globalThis.window && (useNightly.value ? loadDatexNightly() : loadDatexStable());
 
@@ -265,13 +290,6 @@ export default {
         isRunning.value = false
       }
     }
-
-    watch(() => props.code, (newCode) => {
-      code.value = newCode
-      nextTick(() => {
-        calculateEditorHeight()
-      })
-    }, { immediate: true })
 
     watch(code, () => {
       nextTick(() => {
