@@ -46,7 +46,8 @@
 import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 import AnsiToHtml from 'ansi-to-html'
-import { Runtime } from '@unyt/datex';
+import { Runtime, Repl } from '@unyt/datex';
+globalThis.Repl = Repl;
 
 export default {
   name: 'DatexPlayground',
