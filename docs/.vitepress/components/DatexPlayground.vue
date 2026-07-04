@@ -46,7 +46,7 @@
 import { ref, shallowRef, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 import AnsiToHtml from 'ansi-to-html'
-import { Runtime, Repl } from '@unyt/datex';
+import { Runtime, Repl, Builtins } from '@unyt/datex';
 globalThis.Repl = Repl;
 
 export default {
@@ -132,21 +132,23 @@ export default {
         .then(text => text?.trim())
         .catch(() => null);
         console.log(commitHash)
-      const runtime = await initRuntime(mod.Runtime, commitHash);
+      const runtime = await initRuntime(mod.Runtime, mod.Builtins, commitHash);
 
       return runtime;
     }
 
     async function loadDatexStable() {
-      const runtime = await initRuntime(Runtime, null);
+      const runtime = await initRuntime(Runtime, Builtins, null);
       return runtime;
     }
 
-    async function initRuntime(runtimeClass, commitHash) {
+    async function initRuntime(runtimeClass, builtins, commitHash) {
       const defaultConfig = {
+        endpoint: new builtins.Endpoint('@play_' + new Date().getTime()),
         interfaces: [{
             type: "websocket-client",
             config: { url: "wss://example.unyt.land" },
+            priority: builtins.tagged("None")
         }],
       };
 
@@ -154,7 +156,7 @@ export default {
           log_level: 'info',
       });
 
-      endpoint.value = runtime.endpoint;
+      endpoint.value = runtime.endpoint.toString();
       version.value = {
         datex: runtime.version,
         js: runtime.js_version,
